@@ -20,12 +20,17 @@
   },
   "navigation": {
     "directory": "card",
-    "tabs": [
+    "products": [
       {
-        "tab": "Začínáme",
-        "dropdowns": [
+        "product": "DAYZERO Portál",
+        "tabs": [
           {
-            "dropdown": "test"
+            "tab": "Začínáme",
+            "dropdowns": [
+              {
+                "dropdown": "test"
+              }
+            ]
           }
         ]
       }
