@@ -20,7 +20,16 @@
   },
   "navigation": {
     "directory": "card",
-    "groups": []
+    "tabs": [
+      {
+        "tab": "Začínáme",
+        "dropdowns": [
+          {
+            "dropdown": "test"
+          }
+        ]
+      }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
