@@ -22,7 +22,7 @@
     "directory": "card",
     "products": [
       {
-        "product": "DAYZERO Portál",
+        "product": "Začínáme",
         "tabs": [
           {
             "tab": "Začínáme",
@@ -32,7 +32,8 @@
               }
             ]
           }
-        ]
+        ],
+        "icon": "rocket"
       }
     ]
   },
