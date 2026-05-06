@@ -1,0 +1,91 @@
+---
+title: "E-mailing"
+description: "Transakční SMTP a šablony zpráv."
+icon: "mail"
+---
+
+E-mail subsystém v `src/Core/EmailService.php` + `src/Core/SmtpTransport.php`. Posílá transakční zprávy (aktivace, 2FA OTP, změny e-mailu, recovery, mailing kampaně).
+
+## Konfigurace
+
+```json
+{
+  "mail": {
+    "host": "smtp.hostinger.com",
+    "port": 587,
+    "encryption": "tls",
+    "username": "automat@dayzero.cz",
+    "password": "...",
+    "from_address": "automat@dayzero.cz",
+    "from_name": {
+      "cs": "Portál DAYZERO.CZ",
+      "en": "DAYZERO.CZ Portal"
+    }
+  }
+}
+```
+
+## Transport
+
+`SmtpTransport` používá PHP `stream_socket_client` se STARTTLS na portu 587. Žádný PHPMailer / Symfony Mailer — implementace je vlastní (~200 řádků). Stačí pro transakční objem.
+
+## Šablony
+
+Předmět a tělo se generují přes [Translator](/vyvojari/subsystemy/lokalizace) z klíčů `_email.*`:
+
+```
+_email.activation.subject
+_email.activation.body
+_email.recovery.subject
+_email.recovery.body
+_email.challenge.subject
+_email.challenge.body
+_email.email_change.subject
+_email.email_change.body
+_email.integration.discord.subject
+_email.integration.discord.body
+_email.integration.steam.subject
+_email.integration.steam.body
+```
+
+## Placeholdery
+
+V těle e-mailu se nahrazují:
+
+- `{username}` — uživatelské jméno
+- `{link}` — aktivační / recovery / verification odkaz
+- `{code}` — 2FA OTP
+- `{ip}` / `{user_agent}` — kontextové info
+
+## API použití
+
+```php
+$emailService = Container::get(EmailService::class);
+$emailService->send(
+    to: $user->email,
+    subjectKey: '_email.activation.subject',
+    bodyKey: '_email.activation.body',
+    placeholders: ['username' => $user->username, 'link' => $url],
+    locale: $user->locale ?? 'cs_CZ'
+);
+```
+
+## Logování
+
+Každý odeslaný e-mail se loguje do `logs/app.log` s úrovní `INFO`. Selhání jako `WARN` (typicky přechodné — SMTP timeout). Třetí pokus + selhání = `ERROR`.
+
+## Mailing kampaně
+
+Admin může poslat hromadnou zprávu přes `POST /api/v1/admin/mailing`. Backend zařadí příjemce do fronty (`mailing_queue` tabulka) a SMTP posílá v dávkách. Postup:
+
+1. Filtr příjemců (role, faction, verified).
+2. Vytvoření dávky 100 e-mailů.
+3. Posílání s 1s delay mezi dávkami (proti Hostinger limitům).
+4. Reporting do admin panelu (úspěch / selhání).
+
+## Bezpečnost
+
+- SPF a DKIM nastavte v DNS pro `dayzero.cz` (Hostinger to pomáhá).
+- Reverse DNS pro IP serveru = `dayzero.cz` (proti spam scoringu).
+- Žádné inline CSS expressions, žádné obrázky z externích URL.
+- Always plain text + HTML pro každou zprávu.

@@ -1,0 +1,57 @@
+---
+title: "Správa zařízení"
+description: "Přehled aktivních přihlášení a možnost je vzdáleně odhlásit."
+icon: "laptop"
+---
+
+Portál si pamatuje každé zařízení, ze kterého jste se přihlásili — prohlížeč, IP adresu, typ zařízení a operační systém. V **Nastavení → Bezpečnost → Zařízení** je všechny vidíte.
+
+## Co se sleduje
+
+| Údaj | Popis |
+|------|-------|
+| **Typ zařízení** | desktop / mobile / tablet (z User-Agentu) |
+| **Prohlížeč** | Chrome, Firefox, Safari… (verze) |
+| **OS** | Windows, macOS, Linux, iOS, Android |
+| **IP adresa** | Z níž bylo přihlášení provedeno |
+| **Poslední aktivita** | Časový údaj posledního požadavku |
+| **Aktuální** | Příznak, jestli jde o vaše právě používané zařízení |
+
+## Akce, které máte k dispozici
+
+<Tabs>
+  <Tab title="Odhlásit jedno zařízení">
+    Klikněte na ikonu odhlášení u konkrétního řádku. Toto zařízení dostane při dalším requestu odpověď „přihlaste se znovu”.
+  </Tab>
+  <Tab title="Odhlásit ostatní">
+    Tlačítko **Odhlásit všechny ostatní** odhlásí kdekoli kromě aktuálního zařízení. Vhodné po práci na cizím počítači.
+  </Tab>
+  <Tab title="Odhlásit všude">
+    Odhlásí i vás samotné. Použijte, pokud máte podezření na zneužití účtu — a hned potom si změňte heslo.
+  </Tab>
+</Tabs>
+
+<Tip>
+Ihned po jakékoli „odhlásit ostatní” akci doporučujeme **změnit heslo** a zapnout 2FA, pokud jste tak zatím neudělali.
+</Tip>
+
+## Co dělat při podezřelé aktivitě
+
+<Steps>
+  <Step title="Odhlaste všechny ostatní zařízení">
+    Tlačítkem v Nastavení.
+  </Step>
+  <Step title="Změňte heslo">
+    Postup v [Změna hesla](/prirucka/bezpecnost/zmena-hesla).
+  </Step>
+  <Step title="Zapněte 2FA">
+    Pokud ho nemáte. [Návod](/prirucka/bezpecnost/2fa).
+  </Step>
+  <Step title="Zkontrolujte e-mail">
+    Že je stále vaše a nikdo si ji nezměnil. Pokud ano, kontaktujte admina.
+  </Step>
+</Steps>
+
+## Pohled vývojáře
+
+Zařízení se ukládají do tabulky `user_devices` se SHA-256 hashem session cookie. Endpointy: `POST /api/v1/user/me/devices/logout_one`, `logout_others`, `logout_all`. Detaily v [API referenci pro uživatele](/vyvojari/api/reference/users).

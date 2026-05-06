@@ -1,0 +1,69 @@
+---
+title: "Členové a role"
+description: "Správa členů, předání vedení a vykopnutí."
+icon: "users-round"
+---
+
+Frakce má dvě role: **LEADER** (vůdce) a **MEMBER** (člen). LEADER je vždy právě jeden.
+
+## Co umí LEADER
+
+- Měnit název, popis, typ a vizuál frakce
+- Posílat a rušit pozvánky
+- Vykopnout člena
+- Předat vedení jinému členovi
+- Rozpustit frakci (pokud je sám)
+
+## Co umí MEMBER
+
+- Psát do frakčního deníku
+- Přidávat do frakční galerie
+- Číst veškerý frakční obsah
+- Opustit frakci
+
+## Předání vedení
+
+<Steps>
+  <Step title="Otevřete sekci Členové">
+    `/f/{slug}/members` (jen pro LEADER zobrazí akce).
+  </Step>
+  <Step title="Vyberte cílového člena">
+    Klikněte u něj na **Předat vedení**.
+  </Step>
+  <Step title="Potvrďte">
+    Cílový člen se stává LEADER, vy se stáváte MEMBER. Předání je okamžité a nezvratné bez další akce.
+  </Step>
+</Steps>
+
+<Warning>
+Předání vedení nezruší. Pokud jste si to rozmysleli, požádejte nového LEADERa, ať vám vedení předá zpět.
+</Warning>
+
+## Vykopnutí člena
+
+<Steps>
+  <Step title="Otevřete sekci Členové">
+    Stejnou cestou.
+  </Step>
+  <Step title="U cílového člena klikněte na Odebrat">
+    Akce vyžaduje potvrzení.
+  </Step>
+  <Step title="Hotovo">
+    Vykopnutý člen ztrácí přístup k frakční galerii a deníku, ale jeho předchozí příspěvky **zůstávají**.
+  </Step>
+</Steps>
+
+## Souboj o místo (member kapacita)
+
+Frakce nemá pevný strop členů. Pokud jich máte hodně, dejte si pozor na pravidlo „kdo se podílí na rozhodování” — komunikujte přes Discord, ať se neztratí struktura.
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Když LEADER zmizí, co s frakcí?">
+    LEADER zůstává, dokud ho admin ručně nepřepojí. Komunikujte s adminy, pokud LEADER neaktivuje účet déle než pár týdnů.
+  </Accordion>
+  <Accordion title="Můžu si dát pseudonym ve frakci?">
+    Ne, frakce eviduje skutečné uživatelské jméno. Pseudonymy řešte na úrovni postavy.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,63 @@
+---
+title: "Chybové kódy"
+description: "Mapování HTTP statusů na běžné situace v API."
+icon: "circle-alert"
+---
+
+API odpovídá standardními HTTP statusy. JSON envelope (viz [Formát odpovědi](/vyvojari/api/format-odpovedi)) vrací `status: "error"` a textovou `message`.
+
+## Souhrn
+
+| Status | Kdy nastává | Příklad |
+|--------|-------------|---------|
+| **400** Bad Request | Chybný formát nebo validační chyba | Chybí povinné pole, špatný typ. |
+| **401** Unauthorized | Nejste přihlášený | Volání chráněného endpointu bez session. |
+| **403** Forbidden | Nemáte oprávnění | USER volá admin endpoint. |
+| **404** Not Found | Záznam neexistuje | `GET /character/<neznámé id>`. |
+| **409** Conflict | Konflikt stavů | Pozvánka pro uživatele, který už ve frakci je. |
+| **410** Gone | Záznam zaniká | Mrtvá postava, kterou nelze upravit. |
+| **422** Unprocessable Entity | Validní syntax, neplatná logika | (zřídka — typicky 400). |
+| **429** Too Many Requests | Rate limit | Příliš mnoho pokusů o login. |
+| **500** Internal Server Error | Neočekávaná chyba serveru | Bug, výjimka v PHP. |
+
+## Speciální chybové scenarie
+
+### Login
+
+| Situace | Status | Message |
+|---------|--------|---------|
+| Špatné heslo | 401 | „Nesprávné uživatelské jméno nebo heslo.” |
+| Neaktivní účet | 403 | „Účet není aktivován.” |
+| 2FA challenge | 200 (s `data.challenge: true`) | — |
+| Rate limit | 429 | „Příliš mnoho pokusů, zkuste to za chvíli.” |
+
+### Postava
+
+| Situace | Status | Message |
+|---------|--------|---------|
+| Více než 3 živé | 409 | „Můžete mít maximálně 3 živé postavy.” |
+| Editace mrtvé | 410 | „Postavu nelze upravit po smrti.” |
+| Schválení bez práv | 403 | — |
+
+### Frakce
+
+| Situace | Status |
+|---------|--------|
+| Pozvat uživatele, který už je členem | 409 |
+| Opustit jako LEADER s ostatními | 409 |
+| Rozpustit s členy | 409 |
+
+### Whitelist
+
+| Situace | Status |
+|---------|--------|
+| Druhá žádost při existující PENDING | 409 |
+| Schválení bez admin role | 403 |
+
+## Diagnostika
+
+V `developer_mode = true` (`config/app.json`) chybové odpovědi obsahují i pole `data.exception` se stack trace. V produkci `developer_mode` vypněte, aby se citlivé info nevypisovalo.
+
+## Logování
+
+Všechny 500-tky se logují do `logs/error.log` s timestampem, požadavkem a stack trace. Cron joby logují do `logs/cron.log`.

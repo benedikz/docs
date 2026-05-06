@@ -1,0 +1,76 @@
+---
+title: "Pozvánky"
+description: "Jak posílat, přijímat, odmítat a rušit pozvánky do frakce."
+icon: "mail-plus"
+---
+
+Pozvánka je oficiální prostředek pro vstup nového člena do frakce. Posílá ji LEADER. Žadatel ji může přijmout nebo odmítnout.
+
+## Posílání pozvánky (LEADER)
+
+<Steps>
+  <Step title="Otevřete profil frakce">
+    Sekci najdete na `/f/{slug}` (jen pro LEADER vidíte správu).
+  </Step>
+  <Step title="Klikněte na „Pozvat člena”">
+    Otevře se vyhledávač uživatelů.
+  </Step>
+  <Step title="Najděte hráče podle uživatelského jména">
+    Začnete psát username, portál nabízí uživatele.
+  </Step>
+  <Step title="Odeslat pozvánku">
+    Hráč dostane in-app notifikaci.
+  </Step>
+</Steps>
+
+<Note>
+Pozvánky mají **cooldown** — pokud jich pošlete moc za krátký čas, systém vás brzdí (`429 Too Many Requests`). Limit chrání před spamem.
+</Note>
+
+## Přijímání pozvánky (POZVANÝ)
+
+<Steps>
+  <Step title="Otevřete notifikaci">
+    Zvonek vám ukáže novou pozvánku.
+  </Step>
+  <Step title="Rozhodněte se">
+    Tlačítka **Přijmout** nebo **Odmítnout**.
+  </Step>
+  <Step title="Po přijetí">
+    Stáváte se členem (MEMBER). Pokud jste byli v jiné frakci, **nelze přijmout**, dokud ji neopustíte.
+  </Step>
+</Steps>
+
+## Rušení pozvánky (LEADER)
+
+Pokud jste se zmýlili nebo se rozmysleli:
+
+<Steps>
+  <Step title="Otevřete sekci „Pozvánky”">
+    V profilu frakce.
+  </Step>
+  <Step title="Najděte čekající pozvánku">
+    U té správné klikněte na **Zrušit**.
+  </Step>
+  <Step title="Pozvánka zmizí">
+    Pozvanému se v notifikacích označí jako stažená.
+  </Step>
+</Steps>
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Můžu pozvat někoho, kdo už ve frakci je?">
+    Ne. Endpoint vrátí `409 Conflict`.
+  </Accordion>
+  <Accordion title="Co když pozvaný neaktivní?">
+    Pozvánka tam zůstane, dokud ji nezruší LEADER nebo pozvaný neodpoví. Vyprchání není automatické.
+  </Accordion>
+  <Accordion title="Můžu mít víc pozvánek do různých frakcí?">
+    Ano. Vstoupit ale můžete jen do jedné — přijetím jedné se ostatní automaticky zneplatňují.
+  </Accordion>
+</AccordionGroup>
+
+## Z pohledu vývojáře
+
+Endpointy: `POST /api/v1/faction/:id/invites` (poslat), `PUT /api/v1/faction/:id/invites` (přijmout/odmítnout), `DELETE /api/v1/faction/:id/invites` (zrušit). Detaily v [API reference](/vyvojari/api/reference/faction-invites).

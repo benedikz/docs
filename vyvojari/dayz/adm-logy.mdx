@@ -1,0 +1,47 @@
+---
+title: "ADM logy (legacy)"
+description: "Vanilla DayZ logování — text-based logy ze serveru."
+icon: "file-text"
+---
+
+ADM (`*.ADM`) je výchozí log formát DayZ serveru. Plain-text, line-based, parsovatelný regex pravidly. Portál ho udržuje pro starší servery a jako fallback k relayi.
+
+## Příklady řádků
+
+```
+18:42:13 | Player "Pepa" (id=76561198000000001) is connected
+18:43:01 | Player "Pepa" (DEAD) (id=76561198000000001 pos=<12345.6, 7890.1, 5.0>) [HP: 0] killed by Player "Drsnak" (id=76561198000000002 pos=<12340.0, 7895.0, 5.5>) with AKM from 8.5 meters
+18:50:00 | Player "Pepa" has been disconnected
+```
+
+## Implementace
+
+`src/Core/Services/Dayz/AdmIngestService.php` + `AdmLogParser.php`.
+
+`AdmLogParser` má pole regex pravidel pro každý typ řádku. Pokud žádné neodpovídá, řádek se ignoruje (forward-compat).
+
+## Co se z ADM dá získat
+
+- Connect / disconnect (mapuje na `user_sessions`)
+- Smrti hráčů (KILL)
+- Sebevraždy
+- Některá poškození (omezená)
+- Spawny (s mírnou ztrátou)
+
+Co ADM **nemá** (zatím v relay): pozice v pravidelných intervalech, vitals snapshots, výstřely.
+
+## Cron job
+
+`AdmIngestJob` běží každou hodinu. Spojuje se na SFTP, hledá nové `.ADM` soubory v adresáři server logů.
+
+## Manuální upload
+
+`POST /api/v1/admin/adm-ingest` — upload jednoho souboru z admin panelu.
+
+## Konflikty s relayí
+
+Pokud server posílá oba formáty (ADM i Relay), preferuje se relay. ADM se použije jen pro řádky, které relay nepokrývá. Deduplikace běží na úrovni `user_sessions` (unikátnost `(steamid, action, timestamp)`).
+
+## Plán
+
+ADM zůstane podporovaný, dokud aspoň jeden produkční server posílá data v tomto formátu. Doporučení je nicméně **migrovat všechny servery na Relay**, protože pipeline je rychlejší, přesnější a snáze rozšiřitelná.

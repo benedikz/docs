@@ -1,0 +1,67 @@
+---
+title: "Přehled postav"
+description: "Co jsou RP postavy, jak fungují limity a životní cyklus."
+icon: "users"
+---
+
+Postava je váš avatar v RP světě DAYZERO. Není to jen jméno na seznamu — má příběh, věk, povolání, charakter, vojenský background a osud. Hra se kolem postav točí.
+
+## Pravidla v jedné tabulce
+
+| Pravidlo | Hodnota |
+|----------|---------|
+| Maximum **živých** postav současně | 3 |
+| Maximum všech postav (i mrtvých) | bez limitu |
+| Stav nově vytvořené postavy | `PENDING` (čeká na schválení) |
+| Lze postavu po schválení smazat? | Ne (lze ji jen označit jako **mrtvou**) |
+| Lze měnit jméno, věk, pohlaví, třídu? | Ne, po schválení uzamčeno |
+| Lze měnit popis, vlastnosti, skills? | Ano, kdykoli |
+
+## Životní cyklus postavy
+
+<Steps>
+  <Step title="Vytvoření">
+    Vyplníte dotazník a odešlete. Status: **PENDING**.
+  </Step>
+  <Step title="Schválení">
+    Admin posoudí, schválí (status: **APPROVED**) nebo zamítne (status: **DENIED**, v notifikaci je důvod).
+  </Step>
+  <Step title="Aktivní hraní">
+    Postavu „žijete” — píšete deník, sbíráte statistiky z herního serveru (na základě Steam64 ID).
+  </Step>
+  <Step title="Smrt">
+    Pokud postava ve hře zemře, na portále ji [označíte jako mrtvou](/prirucka/postavy/smrt).
+  </Step>
+  <Step title="Volitelně: zveřejnění">
+    Mrtvou postavu můžete [zveřejnit jako memoriál](/prirucka/postavy/publikace-mrtve) — slouží jako vzpomínka.
+  </Step>
+</Steps>
+
+## Související
+
+<CardGroup cols={2}>
+  <Card title="Vytvoření postavy" icon="user-round-plus" href="/prirucka/postavy/vytvoreni">
+    Krok-po-kroku průvodce.
+  </Card>
+  <Card title="Pole postavy" icon="list" href="/prirucka/postavy/pole-postavy">
+    Detailní popis všech polí včetně volitelných.
+  </Card>
+  <Card title="Schvalování" icon="check" href="/prirucka/postavy/schvalovani">
+    Co admini hodnotí a typické důvody zamítnutí.
+  </Card>
+  <Card title="Deník postavy" icon="book-open" href="/prirucka/deniky/prehled">
+    Strukturovaný RP zápisník.
+  </Card>
+</CardGroup>
+
+## Co se počítá ze statistik
+
+Pro každou postavu lze zobrazit statistiky odvozené z relay logů:
+
+- **Hodiny ve hře** (z VITAL eventů)
+- **Počet zabití** (KILL eventy)
+- **Počet smrtí** (KILL na vás)
+- **Vystřelené kulky** (SHOT eventy)
+- **Zombie kills** (ZKILL)
+
+Pro vývojářský pohled viz [DayZ integrace](/vyvojari/dayz/prehled).

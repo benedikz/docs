@@ -1,0 +1,58 @@
+---
+title: "Změna e-mailu"
+description: "Bezpečný postup pro změnu e-mailové adresy, na kterou chodí notifikace a 2FA kódy."
+icon: "mail"
+---
+
+E-mail je důležitý pro notifikace, obnovu hesla i 2FA kódy. Změna proto probíhá s dvojí kontrolou — potvrzujete ji ze **starého** e-mailu.
+
+## Postup
+
+<Steps>
+  <Step title="Otevřete Nastavení → Profil">
+    Najděte pole **E-mail** a klikněte na **Změnit**.
+  </Step>
+  <Step title="Zadejte novou adresu">
+    Portál ji uloží jako **pending** (čekající na potvrzení).
+  </Step>
+  <Step title="Otevřete e-mail na STARÉ adrese">
+    Z bezpečnostních důvodů potvrzovací odkaz dostanete **na původní adresu**.
+  </Step>
+  <Step title="Klikněte na odkaz v e-mailu">
+    Tím změnu autorizujete a nový e-mail začne platit.
+  </Step>
+</Steps>
+
+## Proč potvrzení ze starého e-mailu
+
+Pokud útočník získal heslo, ale ne přístup k e-mailu, nemůže si změnit e-mail na svůj a uzamknout vás z účtu. Tento postup je tedy ochrana proti **account takeoveru**.
+
+## Když ke starému e-mailu nemáte přístup
+
+V tomto případě portál sám změnu nedokončí — musíte se domluvit s adminem.
+
+<Steps>
+  <Step title="Kontaktujte admina">
+    Napište na komunální Discord nebo na admin kontakt.
+  </Step>
+  <Step title="Doložte identitu">
+    Admin si ověří, že jde skutečně o vás (Steam ID, herní postava, Discord ID).
+  </Step>
+  <Step title="Admin nastaví nový e-mail ručně">
+    Po nastavení vám pošle aktivační odkaz na novou adresu.
+  </Step>
+</Steps>
+
+## Časté chyby
+
+<AccordionGroup>
+  <Accordion title="„E-mail je již obsazen jiným účtem”">
+    Adresu používá jiný uživatel (živý nebo plánovaný k smazání). Vyberte jinou.
+  </Accordion>
+  <Accordion title="„Probíhá jiná změna e-mailu”">
+    Pokud jste si v poslední době vyžádali změnu, musí původní vypršet (nebo ji zrušíte) než spustíte novou. Limit chrání proti spamu.
+  </Accordion>
+  <Accordion title="Potvrzovací odkaz vypršel">
+    Tokeny pro změnu e-mailu typicky platí 24 hodin. Pokud lhůtu zmeškáte, vyžádejte změnu znovu.
+  </Accordion>
+</AccordionGroup>

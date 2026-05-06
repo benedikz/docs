@@ -1,0 +1,57 @@
+---
+title: "Beans"
+description: "Endpointy pro virtuální měnu."
+icon: "coins"
+---
+
+## `GET /api/v1/user/:id/beans`
+
+Vrátí zůstatek a historii transakcí daného uživatele.
+
+**Pravidla:**
+
+- Self → vidí všechny detaily.
+- Cizí → veřejně viditelný jen zůstatek (záleží na konfiguraci).
+
+**Odpověď:**
+
+```json
+{
+  "data": {
+    "balance": 1250,
+    "items": [
+      { "id": "uuid", "amount": 250, "reason": "achievement.granted", "created_at": "..." },
+      { "id": "uuid", "amount": -50, "reason": "admin.correction", "cleared_at": "...", "cleared_by": "..." }
+    ]
+  }
+}
+```
+
+## `POST /api/v1/user/:id/beans`
+
+(Admin) Manuálně přičíst nebo odečíst beans.
+
+**Body:**
+
+```json
+{
+  "amount": 100,
+  "reason": "event.bonus"
+}
+```
+
+`amount` může být záporný.
+
+## Datový model
+
+Tabulka `beans` — každá transakce je jeden řádek:
+
+| Sloupec | Typ |
+|---------|-----|
+| `id` | UUID |
+| `user_id` | FK users |
+| `amount` | int (může být záporný) |
+| `cleared_at` | datetime (nullable) |
+| `cleared_by` | FK users (nullable) |
+
+Zůstatek se počítá jako `SUM(amount) WHERE cleared_at IS NULL`.

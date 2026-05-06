@@ -1,0 +1,48 @@
+---
+title: "Layout profilu"
+description: "Které sekce profilu zobrazit ostatním a jak vypadá banner."
+icon: "layout-template"
+---
+
+Layout určuje, jaké části vašeho profilu uvidí ostatní uživatelé. Skryté sekce se nezobrazují vůbec — žádné prázdné placeholdery.
+
+## Skryt nebo zobrazit
+
+V Nastavení → **Layout profilu** najdete přepínače pro tyto sekce:
+
+| Sekce | Co se skryje | Doporučení |
+|-------|-------------|------------|
+| **Cover (banner)** | Horní obrázek profilu | Pokud nemáte vhodný obrázek, vypněte. |
+| **Galerie** | Seznam vašich fotek | Vhodné skrýt, dokud nemáte co ukázat. |
+| **Deníky** | Veřejné deníky postav | Skryjete, pokud neexistují žádné PUBLIC zápisy. |
+| **Achievementy** | Získané odznaky | Většina hráčů nechává viditelné. |
+| **Frakce** | Frakce, jejíž jste členem | Skryje, dokud nejste v žádné. |
+
+## Banner s parametry
+
+Pokud máte cover **viditelný**, navíc upravíte:
+
+- **Velikost** (`size`) — jak má prohlížeč obrázek vykreslit:
+  - `cover` — vyplní celý prostor, může oříznout (default)
+  - `contain` — zachová proporce, nechá okraje
+  - `auto` / `100%` / `50%` / `200%` — explicitní procentní velikost
+- **Opacity** (`opacity`) — 0 (úplně průhledné) až 1 (plné).
+
+## Jak nastavení uložit
+
+<Steps>
+  <Step title="Změňte přepínače / hodnoty">
+    Náhled vidíte rovnou v editoru.
+  </Step>
+  <Step title="Klikněte na Uložit">
+    Změny se aplikují i pro nepřihlášené návštěvníky.
+  </Step>
+</Steps>
+
+## Co se posílá API
+
+Layout je interně JSON blob (`users.profile_layout`), který se mění přes endpoint `PUT /api/v1/user/me/layout`. Vývojářské detaily najdete v [API referenci pro uživatele](/vyvojari/api/reference/users).
+
+<Tip>
+Pokud chcete „minimalistický” profil, vypněte vše kromě hlavičky a frakce. Druzí uvidí jen avatar, jméno a frakci, do které patříte.
+</Tip>

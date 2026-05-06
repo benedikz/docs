@@ -1,0 +1,61 @@
+---
+title: "Registrace"
+description: "Vytvoření nového účtu na DAYZERO Portálu pomocí e-mailu a hesla."
+icon: "user-plus"
+---
+
+Účet si můžete založit dvěma způsoby — vyplněním registračního formuláře, nebo přihlášením přes Discord či Steam (v takovém případě se účet vytvoří automaticky).
+
+## Registrace e-mailem
+
+<Steps>
+  <Step title="Otevřete registrační formulář">
+    Klikněte na **Registrace** v pravém horním rohu portálu.
+  </Step>
+  <Step title="Vyplňte údaje">
+    - **Uživatelské jméno** — 3 až 32 znaků, malá písmena, čísla a znaky `.`, `_`, `-`. Musí být unikátní.
+    - **E-mail** — na něj přijde aktivační odkaz a později notifikace.
+    - **Heslo** — minimálně 8 znaků.
+  </Step>
+  <Step title="Souhlas s pravidly">
+    Zaškrtněte souhlas s **podmínkami použití** a **zásadami ochrany osobních údajů**.
+  </Step>
+  <Step title="Odešlete formulář">
+    Po odeslání vám systém pošle aktivační e-mail. Pokračujte v kapitole [Aktivace účtu](/zaciname/aktivace).
+  </Step>
+</Steps>
+
+<Note>
+Uživatelské jméno se ukládá vždy malými písmeny. „Pepa” a „pepa” jsou tedy stejný účet — nemusíte si pamatovat přesné psaní velkých písmen.
+</Note>
+
+## Registrace přes Discord nebo Steam
+
+Pokud nechcete řešit nové heslo, klikněte na portálu na **Přihlásit přes Discord** nebo **Přihlásit přes Steam**. Při prvním přihlášení se vám automaticky vytvoří účet a portál si stáhne základní údaje (jméno, avatar, e-mail).
+
+<CardGroup cols={2}>
+  <Card title="Discord" icon="message-circle" href="/zaciname/propojeni-discord">
+    Detailní postup propojení s Discordem.
+  </Card>
+  <Card title="Steam" icon="gamepad-2" href="/zaciname/propojeni-steam">
+    Postup pro propojení se Steam účtem.
+  </Card>
+</CardGroup>
+
+## Časté chyby
+
+<AccordionGroup>
+  <Accordion title="„Toto uživatelské jméno už existuje”">
+    Zvolte jiné. Z bezpečnostních důvodů systém neprozradí, jestli jméno patří aktivnímu nebo smazanému účtu.
+  </Accordion>
+  <Accordion title="Aktivační e-mail nedorazil">
+    Zkontrolujte složku **Spam / Hromadné**. Pokud nic nedorazí ani po 10 minutách, spojte se s adminem na Discordu.
+  </Accordion>
+  <Accordion title="Heslo systém odmítá">
+    Heslo musí mít minimálně 8 znaků. Doporučujeme alespoň jedno velké písmeno, číslici a speciální znak — i když to není povinné.
+  </Accordion>
+</AccordionGroup>
+
+## Co se děje na pozadí
+
+Pro úplnost — registrace volá API endpoint `POST /api/v1/auth/register`. Přesný formát požadavku a odpovědi najdete v [API referenci pro autentizaci](/vyvojari/api/reference/auth).

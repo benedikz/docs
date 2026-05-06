@@ -1,0 +1,154 @@
+---
+title: "Relay formát"
+description: "NDJSON eventy, které DayZ server zapisuje pro portál."
+icon: "file-json"
+---
+
+Plný spec najdete v `RELAY_FORMAT_SPEC.md` v repozitáři. Zde je shrnutí.
+
+## Soubor
+
+| Vlastnost | Hodnota |
+|-----------|---------|
+| Cesta | `<server profile>/DAYZERO_Relay/relay_YYYY-MM-DD.jsonl` |
+| Rotace | Denně |
+| Retence | Dnes + včera (server smaže starší automaticky) |
+| Encoding | UTF-8 |
+| Line ending | LF |
+| Buffering | až 2 sekundy v RAM (server batchuje pro výkon) |
+
+## Formát řádku
+
+Každý řádek je jeden JSON objekt. Minimum:
+
+```json
+{ "ts": "2025-05-01T18:42:13Z", "ev": "CONN", "id": "76561198...", "name": "Pepa" }
+```
+
+Klíčová pole:
+
+| Pole | Typ | Popis |
+|------|-----|-------|
+| `ts` | string | Naivní lokální čas serveru. Klient přidá timezone. |
+| `ev` | string | Typ eventu (viz níže). |
+| `id` | string | Steam64 hráče (kde dává smysl). |
+| `name` | string | Persona name (pomocná identifikace). |
+
+Další pole závisí na typu eventu.
+
+## Typy eventů
+
+### `BOOT`
+
+Server start.
+
+| Pole | Význam |
+|------|--------|
+| `pos_tick` | Tick rate POS eventů (ms) |
+| `vitals_tick` | Tick rate VITAL eventů |
+| `flush` | Flush interval bufferu |
+| `burst_to` | Maximální velikost burst |
+
+### `CONN`
+
+Hráč se připojil.
+
+```json
+{ "ts": "...", "ev": "CONN", "id": "76561...", "name": "Pepa" }
+```
+
+### `DISC`
+
+Hráč se odpojil. Stejná pole jako `CONN`.
+
+### `POS`
+
+Aktualizace pozice. Posílá se v intervalu `pos_tick`.
+
+```json
+{ "ts": "...", "ev": "POS", "id": "76561...", "name": "Pepa", "pos": [12345.6, 0, 7890.1] }
+```
+
+`pos` je `[X, Z, Y]` (DayZ pořadí — Y je up).
+
+### `VITAL`
+
+Snapshot zdraví.
+
+| Pole | Význam |
+|------|--------|
+| `hp` | Health 0–100 |
+| `blood` | Blood 0–5500 (nebo 0–100, dle balancu) |
+| `shock` | 0–100 |
+| `stam` | Stamina 0–100 |
+| `nrg` | Energy (jídlo) |
+| `wtr` | Water |
+| `hc` | Heat comfort |
+| `bleed` | Bleed level |
+
+### `SHOT`
+
+Výstřel.
+
+| Pole | Význam |
+|------|--------|
+| `weapon` | Class name zbraně |
+| `ammo` | Class name munice |
+| `pos` | Pozice |
+| `count` | Počet kulek (burst) |
+| `dur_ms` | Doba burstu |
+
+### `DMG`
+
+Poškození.
+
+| Pole | Význam |
+|------|--------|
+| `victim_id` | Steam64 oběti |
+| `att_id` | Steam64 útočníka (pokud je) |
+| `src` | Zdroj — typ damage |
+| `ammo` | Použitá munice |
+| `zone` | Zasažená zóna těla |
+| `dmg` | Hodnota damage |
+| `dist` | Vzdálenost (m) |
+
+### `KILL`
+
+Smrt hráče.
+
+Stejná pole jako DMG +:
+
+| Pole | Význam |
+|------|--------|
+| `hs` | 1 = headshot, 0 = jiné |
+
+### `ZKILL`
+
+Zabití zombie.
+
+| Pole | Význam |
+|------|--------|
+| `id` | Steam64 hráče |
+| `zombie` | Class name zombie |
+| `weapon` | Class name zbraně |
+| `dist` | Vzdálenost |
+
+## Pravidla parsování
+
+- **Malformovaný JSON** se ignoruje (neshazuje pipeline).
+- **Neznámý `ev`** se přeskakuje (forward-compat — server může zavést nové eventy).
+- **Steam64** se validuje regex `^7656119[89]\d{10}$`.
+- **Idempotency**: triplet `(ts, ev, id)` slouží jako klíč pro deduplikaci.
+- **Timezone**: `ts` je lokální čas serveru, klient přidává `+02:00` (CEST) nebo `+01:00` (CET).
+
+## Příklad celého souboru
+
+```jsonl
+{"ts":"2025-05-01T18:00:00Z","ev":"BOOT","pos_tick":1000,"vitals_tick":5000,"flush":2000,"burst_to":50}
+{"ts":"2025-05-01T18:01:23Z","ev":"CONN","id":"76561198000000001","name":"Pepa"}
+{"ts":"2025-05-01T18:01:25Z","ev":"VITAL","id":"76561198000000001","hp":100,"blood":5000,"stam":80,"nrg":80,"wtr":75,"hc":50,"bleed":0,"shock":0}
+{"ts":"2025-05-01T18:05:10Z","ev":"SHOT","id":"76561198000000001","weapon":"AKM","ammo":"Ammunition_762x39","pos":[12345.6,0,7890.1],"count":3,"dur_ms":600}
+{"ts":"2025-05-01T18:05:11Z","ev":"DMG","victim_id":"76561198000000002","att_id":"76561198000000001","src":"FirearmDamage","ammo":"Ammunition_762x39","zone":"Head","dmg":140,"dist":42.7}
+{"ts":"2025-05-01T18:05:11Z","ev":"KILL","victim_id":"76561198000000002","att_id":"76561198000000001","src":"FirearmDamage","ammo":"Ammunition_762x39","zone":"Head","dmg":140,"dist":42.7,"hs":1}
+{"ts":"2025-05-01T18:30:00Z","ev":"DISC","id":"76561198000000001","name":"Pepa"}
+```

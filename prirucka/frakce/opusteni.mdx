@@ -1,0 +1,52 @@
+---
+title: "Opuštění frakce"
+description: "Jak frakci opustit z pozice člena nebo vůdce."
+icon: "log-out"
+---
+
+Frakci můžete opustit kdykoli. Důsledky se ale liší podle role a podle toho, jestli jste sami.
+
+## Opuštění z pozice MEMBER
+
+<Steps>
+  <Step title="Otevřete profil frakce">
+    `/f/{slug}`
+  </Step>
+  <Step title="Klikněte na „Opustit frakci”">
+    Akce vyžaduje potvrzení.
+  </Step>
+  <Step title="Hotovo">
+    Z frakce zmizíte. Předchozí zápisy v deníku a fotky v galerii zůstávají.
+  </Step>
+</Steps>
+
+## Opuštění z pozice LEADER
+
+LEADER **nemůže** prostě odejít, pokud má další členy. Musí nejprve [předat vedení](/prirucka/frakce/clenove) jinému členovi.
+
+| Stav | Možnost odchodu |
+|------|-----------------|
+| Sám ve frakci | Můžete frakci [rozpustit](/prirucka/frakce/rozpusteni) — odchod = zánik. |
+| Více členů | Musíte předat vedení, pak odejít. |
+
+<Warning>
+Pokus o odchod jako LEADER s ostatními členy skončí chybou „Nelze opustit frakci, předejte vedení”. Není to omyl, je to ochrana proti bezvládí.
+</Warning>
+
+## Po odchodu
+
+- Pole `user_factions` se smaže.
+- Notifikace LEADERovi (pokud nejste vy LEADER).
+- Achievementy spojené s opouštěním (`FactionLeftChecker`) mohou být uděleny.
+- Můžete vstoupit do jiné frakce.
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Můžu se vrátit?">
+    Pouze na novou pozvánku od LEADERa, případně přihlášením do OPEN frakce.
+  </Accordion>
+  <Accordion title="Smažou se mé fotky a zápisy?">
+    Ne. Zůstávají ve frakci. Pokud chcete smazat svůj příspěvek, udělejte to **před** odchodem.
+  </Accordion>
+</AccordionGroup>

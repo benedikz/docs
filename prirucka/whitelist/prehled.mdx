@@ -1,0 +1,53 @@
+---
+title: "Whitelist přehled"
+description: "Vstupní brána na herní server DAYZERO. Tady najdete pravidla a životní cyklus žádosti."
+icon: "clipboard-list"
+---
+
+Whitelist je seznam hráčů, kteří mohou vstoupit na herní server DAYZERO. Bez něj se na server nepřipojíte — server kontrolu provádí na úrovni Steam ID.
+
+Stručný úvod k podání žádosti je v [Začínáme → Whitelist žádost](/zaciname/whitelist-zadost). Tady najdete detaily celého procesu.
+
+## Klíčová pravidla
+
+| Pravidlo | Hodnota |
+|----------|---------|
+| Maximum aktivních žádostí | **1** (PENDING nebo APPROVED) |
+| Lze žádat opakovaně po zamítnutí | ano |
+| Lze žádost smazat | jen admin |
+| Lze žádost upravit | ne (po zamítnutí podáte novou) |
+| Stav synchronizace na server | denně přes `WhitelistSyncJob` |
+
+## Životní cyklus
+
+<Steps>
+  <Step title="Podání">
+    Vyplníte dotazník na `/u/whitelist`. Status: **PENDING**.
+  </Step>
+  <Step title="Posouzení">
+    Admin si dotazník přečte a rozhodne.
+  </Step>
+  <Step title="Schválení (APPROVED)">
+    Vaše Steam ID se přidá do exportu pro server. Většinou do hodiny můžete na server.
+  </Step>
+  <Step title="Zamítnutí (DENIED)">
+    V `denial_reason` najdete důvod. Můžete podat novou žádost (čítač `attempt` se zvyšuje).
+  </Step>
+</Steps>
+
+## Související
+
+<CardGroup cols={2}>
+  <Card title="Podání žádosti" icon="clipboard-check" href="/prirucka/whitelist/podani">
+    Detailní průvodce.
+  </Card>
+  <Card title="Stav žádosti" icon="circle-check" href="/prirucka/whitelist/stav">
+    Co znamenají jednotlivé stavy.
+  </Card>
+  <Card title="API reference" icon="code" href="/vyvojari/api/reference/whitelist">
+    Pohled vývojáře.
+  </Card>
+  <Card title="Slovníček" icon="book-marked" href="/zaciname/slovnicek">
+    Co znamená *whitelist*, *Steam64* a další.
+  </Card>
+</CardGroup>

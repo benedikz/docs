@@ -1,0 +1,62 @@
+---
+title: "Propojení s Discordem"
+description: "Spárování účtu s Discordem pro snazší přihlášení a notifikace."
+icon: "message-circle"
+---
+
+Propojení s Discordem dělá tři věci najednou: umožní přihlášení jedním klikem, naváže váš profil na konkrétní Discord ID (důležité pro role na komunálním Discord serveru) a v budoucnu přes něj můžete dostávat notifikace.
+
+## Možnosti
+
+| Akce | Popis |
+|------|-------|
+| **Přihlásit se přes Discord** | Při neexistujícím účtu vytvoří nový, jinak vás přihlásí. |
+| **Propojit Discord** | Z přihlášeného účtu připojíte Discord ID. |
+| **Odpojit Discord** | V nastavení zrušíte vazbu (pokud máte alternativu pro přihlášení). |
+
+## Jak Discord propojit
+
+<Steps>
+  <Step title="Přihlaste se na portál">
+    Klasicky uživatelským jménem a heslem.
+  </Step>
+  <Step title="Otevřete Nastavení → Propojené účty">
+    Klikněte na tlačítko **Propojit s Discordem**.
+  </Step>
+  <Step title="Autorizujte aplikaci na Discordu">
+    Discord se zeptá, jestli povolujete přístup k údajům: profilové jméno, e-mail a info o serverech (`identify email guilds.join`).
+  </Step>
+  <Step title="Vrátíte se na portál">
+    Discord vás přesměruje zpět. V nastavení uvidíte připojené Discord ID a avatar.
+  </Step>
+</Steps>
+
+## Bezpečnost a oprávnění
+
+Portál nikdy nezíská heslo k vašemu Discord účtu. Discord vrátí jen tyto údaje:
+
+- **Discord ID** — neměnný identifikátor účtu (např. `742912335…`)
+- **Discord username** a globální nick
+- **Avatar URL**
+- **E-mail** (z accountu)
+- **Souhlas se vstupem do server guildu** — abychom vás mohli přidat na komunální Discord
+
+<Warning>
+Pokud Discord účet odpojíte a nemáte žádné jiné přihlašovací jméno + heslo, při dalším přihlášení nebudete moci používat tlačítko „Discord”. Před odpojením si nastavte heslo.
+</Warning>
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Co když mi vyskočí chyba „Discord ID už používá jiný účet”">
+    Někdo si v minulosti propojil Discord se svým účtem. Pokud věříte, že je to omyl, ozvěte se adminům.
+  </Accordion>
+  <Accordion title="Změnil jsem nick na Discordu — projeví se to?">
+    Ano, při dalším přihlášení nebo aktualizaci si portál stáhne aktuální údaje.
+  </Accordion>
+  <Accordion title="Můžu mít Discord propojený a zároveň přihlášení heslem?">
+    Ano. Obě cesty vedou do stejného účtu.
+  </Accordion>
+</AccordionGroup>
+
+Pro vývojářský pohled na flow viz [OAuth integrace → Discord](/vyvojari/oauth/discord).

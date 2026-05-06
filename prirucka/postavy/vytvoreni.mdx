@@ -1,0 +1,64 @@
+---
+title: "Vytvoření postavy"
+description: "Krok za krokem od prázdného formuláře po schválenou postavu."
+icon: "user-round-plus"
+---
+
+Tato kapitola vás provede vytvářením postavy. Stručná verze je v [Začínáme → První postava](/zaciname/prvni-postava); zde najdete kompletní postup s všemi tipy.
+
+## Než spustíte tvorbu
+
+<Check>Mám aktivovaný portálový účet.</Check>
+<Check>Mám propojený Steam.</Check>
+<Check>Vím, jaké RP charakteristiky chci.</Check>
+<Check>Nemám již 3 živé postavy.</Check>
+
+## Postup
+
+<Steps>
+  <Step title="Otevřete „Postavy / Nová postava”">
+    Routa: `/u/character/create`.
+  </Step>
+  <Step title="Vyplňte základní pole">
+    Tvář, jméno, příjmení, pohlaví, věk, datum narození, národnost.
+  </Step>
+  <Step title="Zvolte morálku a třídu">
+    - **Morálka** určuje obecný směr chování (např. *lawful good*, *chaotic neutral*).
+    - **Třída**: civilista, voják, domobranec.
+  </Step>
+  <Step title="Doplňte volitelné pole">
+    Přezdívka, prostředek (skills), pozitivní/negativní vlastnosti, vojenský background, popis (příběh postavy). Více detailů = vyšší šance na rychlé schválení.
+  </Step>
+  <Step title="Nahrajte avatar a banner postavy (volitelně)">
+    Stejné formáty jako u profilu (max 5 MB, JPG/PNG/GIF).
+  </Step>
+  <Step title="Odešlete">
+    Status postavy = **PENDING**. V notifikaci dostanete informaci, jakmile admin rozhodne.
+  </Step>
+</Steps>
+
+## Tipy pro úspěšné schválení
+
+<CardGroup cols={2}>
+  <Card title="Buďte konkrétní" icon="pen-tool">
+    „Voják” stačí jako třída — ale popis postavy by měl říkat **kde sloužila**, **proč odešla**, **co umí**.
+  </Card>
+  <Card title="Konzistence" icon="shapes">
+    Pokud zvolíte morálku *lawful good*, pozitivní vlastnosti by tomu měly odpovídat.
+  </Card>
+  <Card title="Pravdivý věk" icon="cake">
+    Postavy mladší 18 let nelze vytvořit. Příliš vysoký věk je herně nereálný.
+  </Card>
+  <Card title="Vyhněte se klišé" icon="frown">
+    „Bývalý spec-ops, sirotek, slyší hlasy” — admini to vidí denně.
+  </Card>
+</CardGroup>
+
+## Co se stane po odeslání
+
+1. Postava se uloží do DB se statusem `PENDING`.
+2. Admin dostane interní notifikaci.
+3. Po posouzení status přejde na `APPROVED` nebo `DENIED`.
+4. Vy obdržíte notifikaci na portále i e-mail.
+
+Detailní rozbor jednotlivých polí najdete v [Pole postavy](/prirucka/postavy/pole-postavy).

@@ -1,0 +1,101 @@
+---
+title: "Ingest pipeline"
+description: "Implementace zpracování relay logů na portálu."
+icon: "cog"
+---
+
+Pipeline pro relay je v `src/Core/Services/Dayz/Relay/`. Vstup je NDJSON soubor, výstup řádky v MySQL tabulkách.
+
+## Komponenty
+
+```
+IngestService
+   │
+   ├── SftpDiscovery — najde nové soubory
+   ├── JsonLineDecoder — parsuje řádky
+   ├── EventDispatcher — routuje na sinks
+   │
+   └── Sinks:
+       ├── ServerBootSink (BOOT)
+       ├── SessionEventSink (CONN, DISC)
+       ├── PositionSink (POS)
+       ├── VitalSink (VITAL)
+       ├── ShotSink (SHOT)
+       ├── DamageSink (DMG)
+       ├── KillSink (KILL)
+       └── ZombieKillSink (ZKILL)
+```
+
+## Životní cyklus jobu
+
+<Steps>
+  <Step title="Cron spuštění">
+    `RelayIngestJob::execute()` se zavolá každých 5 minut.
+  </Step>
+  <Step title="SFTP discovery">
+    Připojí se na herní server přes SFTP, vylistuje soubory `relay_*.jsonl` které ještě nezpracoval (porovnání podle md5 hash + last position offset).
+  </Step>
+  <Step title="Parse + dispatch">
+    Pro každý nový řádek se zavolá `EventDispatcher::dispatch($event)`. Ten najde odpovídající sink podle `ev`.
+  </Step>
+  <Step title="Sink processing">
+    Sink ověří validaci, případně dohledá uživatele podle Steam64, zapíše záznam.
+  </Step>
+  <Step title="Commit">
+    Po dokončení souboru se transakce committuje. Záznam o zpracování (název souboru + offset) se uloží.
+  </Step>
+  <Step title="Cleanup">
+    Zpracované soubory zůstávají na herním serveru až do jeho rotace (dnes / včera).
+  </Step>
+</Steps>
+
+## Sink interface
+
+```php
+interface EventSinkInterface {
+    public function supports(string $eventType): bool;
+    public function handle(array $event, IngestContext $ctx): void;
+}
+```
+
+`IngestContext` nese referenci na PDO, logger, mapování steamid → user_id.
+
+## Dry run
+
+`RelayIngestJob` přijímá příznak `$dryRun`. V dry-run režimu se proběhne celá pipeline, jen se přeskočí `INSERT` / `UPDATE`. Užitečné pro testování nových sinků.
+
+## Idempotency
+
+Každý sink kontroluje, jestli už event nebyl zapsán:
+
+- `SessionEventSink` — `(steamid, action, timestamp)` unique.
+- `KillSink` — `(victim_id, att_id, ts)` unique.
+- Ostatní sinks mají vlastní logiku podle smyslu.
+
+## Statistiky a chybové hlášky
+
+Po dokončení jobu se do `cron.log` zapíše:
+
+```
+[RelayIngestJob] Processed 3 files, 18342 events:
+  BOOT=1, CONN=42, DISC=42, POS=12000, VITAL=2400, SHOT=1100, DMG=2200, KILL=88, ZKILL=469
+  Skipped: 0 malformed, 12 unknown_type
+  Took 4.7s
+```
+
+Chyby (timeout, špatný JSON, neznámé Steam ID) jsou WARN, ale nevedou k pádu jobu.
+
+## Přidání nového typu eventu
+
+1. Vytvořte sink v `src/Core/Services/Dayz/Relay/Sinks/`.
+2. Implementujte `EventSinkInterface` (`supports`, `handle`).
+3. Zaregistrujte sink v `EventDispatcher::__construct()`.
+4. Pokud potřebujete nový sloupec, přidejte migraci do `database_migrations/`.
+
+## Manuální spuštění
+
+```bash
+php cron.php?key=<cron_secret>&job=RelayIngestJob&dry_run=1
+```
+
+Nebo přes admin panel `/a/dayz-logs`.

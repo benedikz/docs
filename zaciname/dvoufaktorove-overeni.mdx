@@ -1,0 +1,49 @@
+---
+title: "Dvoufaktorové ověření (2FA)"
+description: "Druhá vrstva ochrany účtu — jednorázový kód odeslaný e-mailem."
+icon: "shield-check"
+---
+
+Dvoufaktorové ověření chrání účet i ve chvíli, kdy se k vašemu heslu dostane někdo cizí. Po správně zadaném heslem ještě potřebuje šestimístný kód, který portál pošle na váš e-mail.
+
+## Zapnutí 2FA
+
+<Steps>
+  <Step title="Přihlaste se na portál">
+    2FA si zapnete pouze ze svého účtu, ne při registraci.
+  </Step>
+  <Step title="Otevřete Nastavení → Bezpečnost">
+    Najděte přepínač **Dvoufaktorové ověření**.
+  </Step>
+  <Step title="Zaškrtněte přepínač a uložte">
+    Od dalšího přihlášení vám portál bude posílat 6místný kód.
+  </Step>
+</Steps>
+
+<Note>
+Kódy se zasílají na e-mail spojený s účtem. Pokud k e-mailu nemáte přístup, **2FA si nezapínejte**, dokud si přístup neobnovíte — jinak se nepřihlásíte.
+</Note>
+
+## Jak vypadá přihlášení s 2FA
+
+1. Zadáte uživatelské jméno a heslo.
+2. Portál vám e-mailem pošle 6místný kód s platností **30 minut**.
+3. Kód opíšete do formuláře a stiskem tlačítka **Ověřit** se přihlásíte.
+
+## Vypnutí 2FA
+
+V **Nastavení → Bezpečnost** vypnete přepínač. Z bezpečnostních důvodů je třeba znovu zadat heslo.
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Můžu místo e-mailu použít Authenticator app?">
+    Aktuálně portál podporuje pouze e-mailové kódy. Podpora aplikace typu Google Authenticator je v plánu.
+  </Accordion>
+  <Accordion title="Co když kód nedorazí?">
+    Zkontrolujte spam. V přihlašovacím formuláři klikněte na **Poslat znovu** — předchozí kód zneplatní a vystaví nový.
+  </Accordion>
+  <Accordion title="Ztratil jsem přístup k e-mailu i k portálu">
+    Kontaktujte admina přes Discord. Po ověření identity mohou 2FA vypnout a obnovit přístup.
+  </Accordion>
+</AccordionGroup>

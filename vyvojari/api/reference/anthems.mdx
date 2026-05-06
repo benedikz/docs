@@ -1,0 +1,55 @@
+---
+title: "Anthems"
+description: "Hymny — upload, mazání, streaming."
+icon: "music"
+---
+
+## `POST /api/v1/user/me/anthem`
+
+Upload hymny.
+
+**Content-Type:** `multipart/form-data`.
+
+**Pole:**
+
+| Pole | Typ |
+|------|-----|
+| `anthem` | OGG Vorbis, max 10 MB |
+| `title` | max 50 |
+| `author` | max 32 (volitelný) |
+| `cover` | JPG/PNG, max 5 MB (volitelný) |
+
+**Odpověď:** `data.anthem_id`, public URL.
+
+**Side effects:** Achievement *Anthem Uploaded* se může udělit.
+
+## `DELETE /api/v1/user/me/anthem`
+
+Smaže hymnu (DB záznam i soubor).
+
+## `GET /anthem_gate.php?file={path}`
+
+Streaming endpoint (mimo `/api/v1/`).
+
+**Pravidla:**
+
+- Vyžaduje session (přihlášený uživatel).
+- Path traversal (`..`) odmítnuto.
+- Podpora HTTP `Range` (Partial Content / 206).
+
+**Content-Type:** `audio/ogg`.
+
+## Datový model
+
+Tabulka `user_anthems`:
+
+| Sloupec | Typ |
+|---------|-----|
+| `id` | UUID |
+| `user_id` | UUID |
+| `anthem` | UUID FK na `user_uploads` |
+| `cover` | UUID FK na `user_uploads` (nullable) |
+| `title`, `author` | string |
+| `created_at` | datetime |
+
+Soubory v `uploads/user/{user_id}/{uuid}.ogg`.

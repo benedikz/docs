@@ -1,0 +1,40 @@
+---
+title: "Faction Journal"
+description: "Společný deník celé frakce."
+icon: "book-marked"
+---
+
+## `GET /api/v1/faction/:id/journal`
+
+Seznam zápisů frakčního deníku. Stejné parametry jako [character journal](/vyvojari/api/reference/character-journals).
+
+## `POST /api/v1/faction/:id/journal`
+
+Vytvoření zápisu.
+
+**Body:**
+
+| Pole | Typ |
+|------|-----|
+| `title` | max 128 |
+| `content` | JSON array bloků |
+| `visibility` | `PUBLIC` / `PROTECTED` (default) / `PRIVATE` |
+| `thumbnail` | UUID uploadu (volitelný) |
+
+**Pravidla:** Autor musí být členem frakce.
+
+## `PUT /api/v1/faction/:id/journal?entry_id=:uuid`
+
+Update zápisu.
+
+**Pravidla:** Edit může autor nebo LEADER. Admin také.
+
+## `DELETE /api/v1/faction/:id/journal?entry_id=:uuid`
+
+Smaže zápis.
+
+**Pravidla:** Smazat může autor, LEADER nebo admin.
+
+## Lajky
+
+Stejně jako u character journals — `GET/POST /api/v1/journal/:id/like`. Vlastní zápis nelze lajkovat.

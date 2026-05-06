@@ -1,0 +1,61 @@
+---
+title: "Úprava postavy"
+description: "Co lze měnit po schválení a co je naopak uzamčeno."
+icon: "pen-line"
+---
+
+Po schválení postavy se část polí uzamkne — ta, která utvářejí identitu RP postavy. Ostatní lze měnit kdykoli.
+
+## Uzamčená pole
+
+Tyto **nelze** po schválení měnit:
+
+- `first_name`, `last_name`, `middle_name`
+- `gender`
+- `age`, `birth_at`
+- `class` (CIVILIAN / SOLDIER / MILITIA)
+- `morality`
+- `nationality`
+
+Pokud potřebujete jednu z těchto věcí změnit (např. opraveno datum narození), kontaktujte admina.
+
+## Volně upravitelná pole
+
+| Pole | Bez problémů kdykoli |
+|------|----------------------|
+| `alias` | ano |
+| `description` | ano |
+| `positive_traits` / `negative_traits` | ano |
+| `skills` | ano |
+| Avatar, banner | ano |
+| `place_of_birth`, `education`, `marital_status`, `openness` | ano |
+| Vojenský background (`military_*`) | ano |
+
+## Postup úpravy
+
+<Steps>
+  <Step title="Otevřete profil postavy">
+    `/u/character/{id}`
+  </Step>
+  <Step title="Klikněte na Upravit">
+    Tlačítko vidí pouze majitel postavy a admin.
+  </Step>
+  <Step title="Změňte pole">
+    Uzamčená pole jsou šedivá / read-only.
+  </Step>
+  <Step title="Uložte">
+    Změna se projeví okamžitě, opětovné schvalování není třeba.
+  </Step>
+</Steps>
+
+<Note>
+Drobné úpravy textu (překlepy, doplnění popisu) admini vítají — postavy se vyvíjejí. Razantní změnu povahy ale obhajte v Discordu, ať to nepůsobí jako *retconning*.
+</Note>
+
+## Změna avataru či banneru
+
+Pokud nahráváte nový obrázek, starý zůstává v úložišti, dokud ho ručně nesmažete (z Nastavení → Soubory). Limity: 5 MB, JPG/PNG/GIF.
+
+## Zveřejnění mrtvé postavy
+
+Pokud je postava mrtvá, nelze ji běžně upravovat — pouze [zveřejnit jako memoriál](/prirucka/postavy/publikace-mrtve). To je jednorázová akce.

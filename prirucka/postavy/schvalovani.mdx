@@ -1,0 +1,64 @@
+---
+title: "Schvalování postavy"
+description: "Jak posouzení probíhá, co admini hodnotí a proč se zamítá."
+icon: "shield-check"
+---
+
+Schvalování postavy je důležitý filtr proti spam profilům i nereálným RP konceptům. Děje se ručně — admin si přečte celý dotazník a posoudí, jestli postava zapadá do světa DAYZERO.
+
+## Co admini hodnotí
+
+<CardGroup cols={2}>
+  <Card title="Konzistence příběhu" icon="link">
+    Sedí věk s životními zkušenostmi? Sedí morálka s vlastnostmi?
+  </Card>
+  <Card title="Realističnost" icon="map">
+    Žádní mutanti, vojáci s 200 misemi za sebou v 25 letech, atp.
+  </Card>
+  <Card title="Detail v popisu" icon="pen-line">
+    Na 2 odstavce stačí, ale měly by být konkrétní.
+  </Card>
+  <Card title="Souhra s herním světem" icon="globe">
+    DAYZERO má vlastní lore — postava by ho neměla popírat.
+  </Card>
+</CardGroup>
+
+## Časová náročnost
+
+Typicky **do 48 hodin**. Pokud admin nestíhá, můžete se nezávazně zeptat na komunálním Discordu — ale opakovaně neurgujte.
+
+## Možné výsledky
+
+### Schváleno (APPROVED)
+
+- Status postavy přechází na `APPROVED`.
+- Pole `approved_by` a `approved_at` se vyplní.
+- Dostanete notifikaci.
+- Postavu můžete začít hrát.
+
+### Zamítnuto (DENIED)
+
+- Status `DENIED`, pole `denial_reason` obsahuje důvod (max 512 znaků).
+- Notifikace s odkazem na úpravu.
+- Postavu **upravte** podle připomínek a znovu **odešlete** (status se vrátí na PENDING, čítač pokusů se zvýší).
+
+## Jak na zamítnutí reagovat
+
+<Steps>
+  <Step title="Přečtěte si důvod">
+    Najdete ho v notifikaci nebo v detailu postavy.
+  </Step>
+  <Step title="Upravte postavu">
+    Editujte popis, vlastnosti, příběh — co bylo problematické. Pole jména/věku/pohlaví uzamčená nejsou, pokud postava ještě nebyla schválena.
+  </Step>
+  <Step title="Odešlete znovu">
+    Status se nastaví na PENDING. Admin posoudí znovu.
+  </Step>
+  <Step title="Při opakovaném zamítnutí">
+    Diskutujte s adminy přímo — někdy stačí zarovnat očekávání.
+  </Step>
+</Steps>
+
+## Proč nepoužít automatické schvalování
+
+Krátká odpověď: aby tu nebylo 50 „bývalých Navy Seal lékařů”. Ruční filtr je jediný funkční nástroj proti hromadné generické tvorbě.

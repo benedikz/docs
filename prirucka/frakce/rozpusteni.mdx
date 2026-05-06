@@ -1,0 +1,64 @@
+---
+title: "Rozpuštění frakce"
+description: "Trvalé zrušení frakce a co se s daty stane."
+icon: "trash-2"
+---
+
+Rozpuštění je definitivní zánik frakce. Jakmile se to stane, název se uvolní pro budoucí použití a obsah (deníky, galerie) se odstraní.
+
+## Kdo může rozpustit
+
+| Role | Podmínka |
+|------|----------|
+| LEADER | Pouze pokud je ve frakci sám (ostatní opustili / byli vyhozeni). |
+| ADMIN | Kdykoli, bez omezení. |
+
+## Postup
+
+<Steps>
+  <Step title="Vyřeště členy">
+    LEADER musí být sám. Buď členy [vyhoďte](/prirucka/frakce/clenove), nebo nechte odejít.
+  </Step>
+  <Step title="Otevřete sekci „Nastavení frakce”">
+    Najdete v profilu `/f/{slug}` (jen pro LEADER).
+  </Step>
+  <Step title="Klikněte na „Rozpustit frakci”">
+    Akce vyžaduje potvrzení textem (vepíšete název frakce).
+  </Step>
+  <Step title="Hotovo">
+    Frakce zmizí ze seznamu i veřejnosti.
+  </Step>
+</Steps>
+
+<Warning>
+Rozpuštění je nezvratné. Členové ztratí přístup k deníku a galerii frakce. Pokud chcete zachovat obsah, exportujte ho předem.
+</Warning>
+
+## Co se s daty stane
+
+- **Frakce** — záznam smazán.
+- **Členství** — všechny řádky `user_factions` smazány.
+- **Pozvánky** — všechny pending pozvánky zrušeny.
+- **Frakční deník a galerie** — smazány.
+- **Avatar a banner uploady** — zůstávají v `user_uploads` (mohou se ručně smazat).
+
+## Když chcete jen pauzu
+
+Pokud frakce dočasně neaktivuje, ale nechcete o ni přijít, je lepší:
+
+1. Nepřijímat nové členy (přepnout na CLOSED).
+2. Nedělat smysluplné akce do návratu.
+3. Zachovat alespoň jednoho LEADERa s aktivním účtem.
+
+Po čase ji můžete „oživit” bez ztráty historie.
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Můžu název frakce použít znovu?">
+    Po rozpuštění je název uvolněn. Můžete vytvořit novou frakci s tímtéž názvem, ale původní historie se neobnoví.
+  </Accordion>
+  <Accordion title="Co když jsem LEADER a nemůžu kontaktovat členy?">
+    Spojte se s adminem. Po posouzení může členy ručně odebrat nebo frakci rozpustit.
+  </Accordion>
+</AccordionGroup>

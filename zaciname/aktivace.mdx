@@ -1,0 +1,35 @@
+---
+title: "Aktivace účtu"
+description: "Potvrzení e-mailové adresy odkazem z aktivační zprávy."
+icon: "mail-check"
+---
+
+Po registraci e-mailem dostanete na zadanou adresu zprávu s aktivačním odkazem. Bez kliknutí na něj se nemůžete přihlásit.
+
+<Steps>
+  <Step title="Otevřete e-mail od adresy automat@dayzero.cz">
+    Předmět zprávy obvykle zní „Aktivace účtu na DAYZERO”. Pokud zpráva nedorazila do 10 minut, podívejte se do **Spam** složky.
+  </Step>
+  <Step title="Klikněte na aktivační odkaz">
+    Odkaz vás přesměruje na stránku portálu, kde se účet automaticky aktivuje.
+  </Step>
+  <Step title="Přihlaste se">
+    Pokračujte na [přihlášení](/zaciname/prihlaseni) — od této chvíle už můžete portál plnohodnotně používat.
+  </Step>
+</Steps>
+
+## Platnost odkazu
+
+Aktivační token platí **24 hodin** od odeslání e-mailu. Pokud lhůta uplyne, registraci je třeba opakovat — nebo požádat admina o ruční aktivaci.
+
+<Warning>
+Odkaz nikomu nepřeposílejte. Kdokoli s ním může váš účet aktivovat a získat k němu přístup do okamžiku, než si nastavíte heslo a 2FA.
+</Warning>
+
+## Ruční zadání tokenu
+
+Pokud odkaz z nějakého důvodu nefunguje, najdete v něm parametr `?token=…`. Token zkopírujte a vložte do formuláře na stránce **Aktivace** (`/auth/activation`).
+
+## Co znamená „už aktivováno”
+
+Pokud uvidíte hlášku, že je účet aktivován, znamená to, že někdo (nejspíš vy z jiného zařízení) odkaz už použil. Stačí se přihlásit běžným způsobem.

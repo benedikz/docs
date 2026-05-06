@@ -1,0 +1,56 @@
+---
+title: "Rate limiting"
+description: "Throttle systém — kdo, kdy a kolik."
+icon: "gauge"
+---
+
+Rate limit chrání API proti zneužití (brute force, scraping, spam). Implementace je v `Core/RateLimiter.php`, ukládá se do tabulky `sys_rate_limits`.
+
+## Default limit
+
+**30 požadavků za 60 sekund** per IP per endpoint. Pokud limit překročíte, dostanete `429 Too Many Requests`.
+
+## Per-endpoint override
+
+V `config/api.json` lze konkrétní endpointy nastavit jinak — typicky přísněji u citlivých akcí:
+
+```json
+{
+  "auth/login": "10/60",
+  "auth/register": "5/300",
+  "support/qr": "20/60"
+}
+```
+
+Formát `<requestů>/<sekund>`.
+
+## Klíč
+
+Klíč v tabulce `sys_rate_limits` má strukturu `{ip}:{endpoint}`. Tedy:
+
+- IP adresa žadatele
+- Cesta endpointu (např. `auth/login`)
+
+Pokud je za reverse proxy, beraně IP z `X-Forwarded-For` (po validaci).
+
+## Čistění
+
+Cron `LogRetentionJob` se mimochodem stará i o vyprázdnění starých rate-limit záznamů. Nicméně samotný limiter funguje jen na základě `window_start`, takže staré záznamy se po vypršení okna automaticky neaplikují.
+
+## Reakce na 429
+
+Klient by měl:
+
+1. Načíst `Retry-After` hlavičku, pokud je přítomná.
+2. Počkat odpovídající dobu.
+3. Opakovat — případně s exponenciálním backoffem.
+
+V UI se obvykle zobrazí varování „Příliš mnoho pokusů, zkuste to za chvíli.”.
+
+## Bypass
+
+V developer_mode lze rate limit globálně vypnout (řešeno v controlleru `RateLimiter::skipIfDeveloper()`). V produkci je vždy zapnutý.
+
+## Sledování
+
+Logy `429` se zapisují do `logs/app.log` s úrovní `WARNING`. Pokud sledujete podezřelé chování, projděte si tyto záznamy.

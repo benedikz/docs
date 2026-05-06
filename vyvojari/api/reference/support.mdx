@@ -1,0 +1,54 @@
+---
+title: "Support / Donations"
+description: "Generování QR kódu pro dárcovskou platbu."
+icon: "heart"
+---
+
+## `GET /api/v1/support/qr`
+
+Vygeneruje payment QR data.
+
+**Query:**
+
+| Parametr | Default | Význam |
+|----------|---------|--------|
+| `country` | `cz` | `cz` (SPAYD) nebo `sk` (Pay By Square) |
+| `amount` | — | Částka v měně daného státu |
+| `vs` | — | Variabilní symbol (volitelný, pro přiřazení) |
+
+**Odpověď:**
+
+```json
+{
+  "data": {
+    "qr_data": "SPD*1.0*ACC:CZ8420...*AM:100*CC:CZK*MSG:Dar...",
+    "iban": "CZ8420...",
+    "currency": "CZK",
+    "amount": 100
+  }
+}
+```
+
+`qr_data` je předem zakódovaný řetězec, který frontend renderuje jako QR (např. přes `qrcode.js`).
+
+## Formáty
+
+### CZ — SPAYD
+
+Plain text:
+
+```
+SPD*1.0*ACC:CZ8420100000002002211273*AM:100*CC:CZK*MSG:Dar na provoz...*X-VS:12345
+```
+
+### SK — Pay By Square
+
+Binární payload (z hlaviček + IBAN + amount), zkomprimován LZMA, zakódován v base32. Implementace `Core/Payment/PayBySquare.php` + `Core/Payment/LzmaEncoder.php`.
+
+## Ověření platby
+
+Po skutečném převodu cron `PaymentCheckJob` (každých 30 min) volá FIO Bank API (`/transactions/...`), filtruje příchozí platby podle našeho IBAN a přiřazuje je uživatelům podle VS / message.
+
+## Datový model
+
+Aktuálně se transakce neukládají do dedikované tabulky — beans se přičítají rovnou. Bankovní výpis je primárním zdrojem pravdy.

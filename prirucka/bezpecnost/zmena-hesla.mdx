@@ -1,0 +1,61 @@
+---
+title: "Změna hesla"
+description: "Jak změnit heslo účtu nebo obnovit zapomenuté."
+icon: "key-round"
+---
+
+## Změna hesla z přihlášeného účtu
+
+<Steps>
+  <Step title="Otevřete Nastavení → Bezpečnost">
+    Najdete pod ikonou účtu v menu.
+  </Step>
+  <Step title="Vyplňte staré a nové heslo">
+    Nové heslo musí mít minimálně **8 znaků**.
+  </Step>
+  <Step title="Uložte">
+    Po uložení vás portál může automaticky odhlásit z ostatních zařízení (záleží na nastavení).
+  </Step>
+</Steps>
+
+## Obnova zapomenutého hesla
+
+<Steps>
+  <Step title="Klikněte na „Zapomenuté heslo”">
+    Pod přihlašovacím formulářem.
+  </Step>
+  <Step title="Zadejte e-mail">
+    Pokud existuje účet s touto adresou, dorazí na ni odkaz s tokenem.
+  </Step>
+  <Step title="Otevřete odkaz a zadejte nové heslo">
+    Token je platný 24 hodin a lze použít jen jednou.
+  </Step>
+  <Step title="Přihlaste se">
+    Nové heslo je aktivní okamžitě.
+  </Step>
+</Steps>
+
+<Note>
+Z bezpečnostních důvodů systém neprozradí, jestli e-mail v databázi existuje. I když ho zadáte špatně, dostanete obecnou hlášku „Pokud existuje účet…”.
+</Note>
+
+## Bezpečnostní doporučení
+
+<CardGroup cols={2}>
+  <Card title="Použijte správce hesel" icon="vault">
+    Pomáhá generovat unikátní silná hesla a pamatovat si je za vás.
+  </Card>
+  <Card title="Zapněte 2FA" icon="shield-check" href="/zaciname/dvoufaktorove-overeni">
+    Druhá vrstva, na které selže drtivá většina pokusů o průnik.
+  </Card>
+  <Card title="Hlídejte zařízení" icon="laptop" href="/prirucka/bezpecnost/sprava-zarizeni">
+    Pravidelně kontrolujte, kde je váš účet přihlášený.
+  </Card>
+  <Card title="Nepoužívejte stejné heslo jinde" icon="copy">
+    Únik hesla z jiné služby je nejčastější způsob kompromitace.
+  </Card>
+</CardGroup>
+
+## Co se na pozadí děje
+
+Hesla se ukládají hashovaná algoritmem **bcrypt** (PHP `PASSWORD_DEFAULT`). Plain text hesla portál nikam neukládá ani nelogovat. Reset používá tabulku `sys_tokens` s typem `TYPE_RECOVERY`.

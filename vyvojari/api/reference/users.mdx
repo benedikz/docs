@@ -1,0 +1,92 @@
+---
+title: "Users"
+description: "Profil, vyhledávání, layout, zařízení, hymna, export, smazání."
+icon: "user"
+---
+
+## `GET /api/v1/users`
+
+Seznam uživatelů s vyhledáváním a stránkováním.
+
+**Query:**
+
+| Parametr | Default | Význam |
+|----------|---------|--------|
+| `q` | — | Substring v username |
+| `page` | 1 | Stránka |
+| `limit` | 10 | Velikost stránky |
+| `no_faction` | 0 | `1` = jen bez frakce (vyžaduje auth) |
+
+**Odpověď:** `data.items[]`, `data.total`.
+
+## `GET /api/v1/user/:id`
+
+Profil uživatele. `:id` může být UUID nebo username.
+
+## `PUT /api/v1/user/me`
+
+Update vlastního profilu — `username`, avatar, banner.
+
+## `PUT /api/v1/user/me/layout`
+
+Update viditelnosti sekcí profilu.
+
+**Body:**
+
+```json
+{
+  "gallery": { "visible": true },
+  "journal": { "visible": false },
+  "achievements": { "visible": true },
+  "faction": { "visible": true },
+  "cover": { "visible": true, "size": "cover", "opacity": 0.7 }
+}
+```
+
+## `DELETE /api/v1/user/me/terminate`
+
+Naplánuje smazání účtu (`scheduled_for_deletion = now`). Cron `UserRemovalJob` po grace period účet fyzicky smaže.
+
+## `GET /api/v1/user/me/export`
+
+GDPR export — JSON soubor se všemi vlastními daty.
+
+## `POST /api/v1/user/me/devices/{action}`
+
+Akce nad zařízeními:
+
+| `action` | Co dělá |
+|----------|---------|
+| `logout_one` | Odhlásí konkrétní zařízení (pole `device_id` v body). |
+| `logout_others` | Odhlásí vše kromě aktuálního. |
+| `logout_all` | Odhlásí všechna včetně aktuálního. |
+
+## `POST /api/v1/user/me/anthem`
+
+Upload hymny. `multipart/form-data` s poli `anthem` (audio), `title`, `author`, `cover` (volitelný image).
+
+**Limity:** 10 MB, formát OGG Vorbis.
+
+## `DELETE /api/v1/user/me/anthem`
+
+Smaže hymnu.
+
+## `GET /api/v1/user/:id/groups`
+
+Seznam rolí (`groups`) uživatele.
+
+## `POST /api/v1/user/:id/group/:group_id`
+
+(Admin) Přiřadí roli uživateli.
+
+## `DELETE /api/v1/user/:id/group/:group_id`
+
+(Admin) Odebere roli.
+
+## `GET /api/v1/sessions`
+
+Vlastní session — jen vy.
+
+## `GET /api/v1/stats`
+
+Globální statistiky portálu (počet uživatelů, postav, frakcí). Veřejný endpoint.

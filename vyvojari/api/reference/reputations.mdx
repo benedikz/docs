@@ -1,0 +1,51 @@
+---
+title: "Reputations"
+description: "Sociální „palec nahoru”."
+icon: "thumbs-up"
+---
+
+## `GET /api/v1/reputations`
+
+Vrátí reputační vztahy.
+
+**Query (alespoň jeden):**
+
+| Parametr | Význam |
+|----------|--------|
+| `user_id` | Komu daný uživatel dal reputaci. |
+| `recipient_id` | Kdo daného uživatele odměnil. |
+
+**Odpověď:** seznam s `user_id`, `recipient_id`, `given_at`.
+
+## `POST /api/v1/reputations`
+
+Udělit reputaci.
+
+**Body:** `{ "user_id": "..." }` (komu).
+
+**Pravidla:**
+
+- Nelze sám sobě (400).
+- Druhý pokus stejnému uživateli je no-op (idempotentní).
+
+## `DELETE /api/v1/reputations`
+
+Odebrat reputaci.
+
+**Body:** `{ "user_id": "..." }`.
+
+## Datový model
+
+Tabulka `user_reputations`:
+
+| Sloupec | Význam |
+|---------|--------|
+| `user_id` | Kdo dává |
+| `recipient_id` | Kdo přijímá |
+| `given_at` | Kdy |
+
+Unikátní klíč na `(user_id, recipient_id)`.
+
+## Notifikace
+
+Přijetí reputace generuje notifikaci `reputation.received` u příjemce. Beans bonus (typicky +100) je připsán automaticky.

@@ -1,0 +1,59 @@
+---
+title: "Calendar"
+description: "Kalendář komunitních akcí."
+icon: "calendar"
+---
+
+## `GET /api/v1/calendar`
+
+Akce v kalendáři.
+
+**Query:**
+
+| Parametr | Default | Význam |
+|----------|---------|--------|
+| `year` | aktuální | Rok |
+| `month` | aktuální | Měsíc (1–12) |
+
+**Odpověď:**
+
+```json
+{
+  "data": {
+    "items": [
+      {
+        "id": "uuid",
+        "title": "Sraz u Cherna",
+        "description": "...",
+        "event_at": "2025-05-15T18:00:00Z",
+        "thumbnail": { "url": "..." }
+      }
+    ]
+  }
+}
+```
+
+## `POST /api/v1/calendar`
+
+(Admin) Vytvoří akci.
+
+**Body:**
+
+| Pole | Typ |
+|------|-----|
+| `title` | max 128 |
+| `description` | text (volitelný) |
+| `event_at` | ISO 8601 datetime |
+| `thumbnail_upload` | UUID uploadu (volitelný) |
+
+## `PUT /api/v1/calendar?id=:uuid`
+
+(Admin) Update akce.
+
+## `DELETE /api/v1/calendar?id=:uuid`
+
+(Admin) Smaže akci.
+
+## Webhook
+
+Vytvoření akce spouští webhook `calendar.event.created` (pokud je nakonfigurovaný v admin panelu).

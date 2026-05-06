@@ -1,0 +1,105 @@
+---
+title: "Upload subsystém"
+description: "Validace, ukládání a dohledávání nahraných souborů."
+icon: "upload"
+---
+
+Implementace v `src/Core/Upload/Upload.php`. Je to thin wrapper nad PHP `move_uploaded_file()` s validací a metadaty v DB.
+
+## Konfigurace
+
+V `config/app.json`:
+
+```json
+{
+  "upload": {
+    "base_path": "/home/.../portal/uploads",
+    "public_url": "/portal/uploads",
+    "images": {
+      "max_size": 5242880,
+      "extensions": ["jpg", "jpeg", "png", "gif"],
+      "mimes": ["image/jpeg", "image/png", "image/gif"]
+    },
+    "anthems": {
+      "max_size": 10485760,
+      "extensions": ["ogg"],
+      "mimes": ["audio/ogg"]
+    }
+  }
+}
+```
+
+## Validace
+
+<Steps>
+  <Step title="Velikost">
+    `$_FILES['x']['size'] <= max_size`. Default 5 MB pro images, 10 MB pro anthems.
+  </Step>
+  <Step title="Extension">
+    Z původního názvu (lowercased), musí být v `extensions`.
+  </Step>
+  <Step title="MIME">
+    Detekuje `finfo_file()`, musí být v `mimes`.
+  </Step>
+  <Step title="Magic bytes">
+    Pro images zkontroluje header (PNG signature, JPEG SOI, GIF magic).
+  </Step>
+</Steps>
+
+## Uložení
+
+```
+uploads/user/{user_id}/{uuid}.{ext}
+```
+
+- `user_id` — vlastník (i pro frakce — uploaduje uživatel, ne frakce sama).
+- `uuid` — UUID v4 jako filename (žádné zachování originálu).
+- `ext` — z původního souboru (validovaný).
+
+## Tabulka `user_uploads`
+
+| Sloupec | Význam |
+|---------|--------|
+| `id` | UUID (= filename bez ext) |
+| `user_id` | Vlastník |
+| `purpose` | viz [Enumy / UploadPurpose](/vyvojari/data/enumy) |
+| `type` | `images` / `anthems` |
+| `path` | absolutní cesta na disku |
+| `public_url` | URL pro web |
+| `size` | bytes |
+| `created_at` | datetime |
+
+Po smazání záznamu z DB se soubor **nemaže automaticky** — `Upload::delete($uploadId)` ho mazat musí explicitně. Důvod: kdybychom mazali při kaskádě, ztratili bychom obrázky, které jsou ještě někde reference (např. původní avatar).
+
+## Public URL
+
+```
+{public_url}/user/{user_id}/{uuid}.{ext}
+```
+
+Příklad: `https://dayzero.cz/portal/uploads/user/8b8f.../9c9f....jpg`.
+
+## Akcept HTTP
+
+Pro upload se používá `multipart/form-data` request. Endpoint dle účelu:
+
+| Účel | Endpoint |
+|------|----------|
+| Avatar / banner | `PUT /api/v1/user/me` (s `multipart`) |
+| Gallery | `POST /api/v1/user/:user_id/gallery` |
+| Anthem | `POST /api/v1/user/me/anthem` |
+| Faction avatar / cover | inline při PUT/POST faction |
+| Journal thumbnail | inline při POST journal |
+
+## Bezpečnost
+
+- Žádné PHP nebo `.htaccess` v upload directory (chrání `.htaccess` v root uploads).
+- MIME se ověří, nejen extension.
+- Image library nečte obsah — žádný resize, žádný EXIF strip (zatím).
+- Pro audio se neprovádí re-encode; očekává se OGG Vorbis.
+
+## Plánovaná zlepšení
+
+- Auto-resize obrázků (avatar 512×512, banner 1920×480)
+- EXIF strip pro privacy (geotagy)
+- WebP variants pro úsporu šířky pásma

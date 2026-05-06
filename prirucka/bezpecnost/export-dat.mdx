@@ -1,0 +1,53 @@
+---
+title: "Export dat (GDPR)"
+description: "Stáhnutí všech vašich osobních údajů v jednom JSON souboru."
+icon: "download"
+---
+
+V souladu s GDPR má každý uživatel právo dostat kopii svých dat ve strojově čitelné podobě. Portál pro to nabízí jednorázový export.
+
+## Co se exportuje
+
+JSON soubor obsahuje:
+
+- **Profil** — username, e-mail, avatar/banner URL, datum registrace, status
+- **Postavy** — všechny vaše postavy včetně mrtvých, deníků a polí
+- **Frakce** — členství v aktuálních i minulých frakcích
+- **Sledování** — koho sledujete a kdo sleduje vás
+- **Reputace** — komu jste dali a od koho jste dostali
+- **Achievementy** — datum udělení a typ
+- **Zařízení** — historie přihlášení (IP, prohlížeč, OS)
+- **Notifikace** — aktivní i přečtené
+- **Souhlasy** — ToS, Privacy Policy s časem a verzí dokumentu
+
+Co tam **není**:
+
+- Heslo (ani v hashované podobě)
+- Soukromé tokeny pro 2FA / aktivace
+- Logy ostatních uživatelů, kteří s vámi sdíleli pozvánky či jiné akce
+
+## Postup stažení
+
+<Steps>
+  <Step title="Otevřete Nastavení → Soukromí">
+    Sekci najdete na stejné stránce jako *Smazání účtu*.
+  </Step>
+  <Step title="Klikněte na Stáhnout export">
+    Endpoint `GET /api/v1/user/me/export` připraví soubor.
+  </Step>
+  <Step title="Uložte soubor">
+    Prohlížeč nabídne JSON soubor pojmenovaný `dayzero-export-{username}-{datum}.json`.
+  </Step>
+</Steps>
+
+<Warning>
+Soubor obsahuje citlivé osobní údaje. Skladujte ho bezpečně a nesdílejte s nikým, komu nevěříte.
+</Warning>
+
+## Limit a frekvence
+
+Export není omezen na počet, ale je rate-limitován (jeden běžně za pár minut). Pro masivní stahování (např. po smazání účtu) si export nejdřív stáhněte a teprve potom pokračujte k [smazání účtu](/prirucka/bezpecnost/smazani-uctu).
+
+## Jak data využít
+
+JSON je možné importovat do tabulky, převést do CSV nebo si jen přečíst v textovém editoru. Strukturu zachovává přesně tak, jak ji portál interně reprezentuje, takže hodí se i pro vývojáře, kteří chtějí postavit alternativní klient.

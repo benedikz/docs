@@ -1,0 +1,76 @@
+---
+title: "Character Journals"
+description: "Deníky postav a jejich lajky."
+icon: "book-open"
+---
+
+## `GET /api/v1/character/:id/journal`
+
+Seznam zápisů deníku postavy.
+
+**Query:**
+
+| Parametr | Default | Význam |
+|----------|---------|--------|
+| `page` | 1 | Stránka |
+| `limit` | 20 (max 50) | Velikost |
+| `search` | — | Substring v `title` |
+| `entry_id` | — | Vrátí jen jeden konkrétní zápis |
+
+**Odpověď:** `data.items[]` s polem `likes.count` a `likes.liked_by_me`.
+
+## `POST /api/v1/character/:id/journal`
+
+Vytvoření zápisu.
+
+**Body:**
+
+| Pole | Typ |
+|------|-----|
+| `title` | max 128 |
+| `content` | JSON array (`[{ "type": "paragraph", "text": "..." }]`) |
+| `visibility` | enum: `VISIBILITY_PUBLIC`, `VISIBILITY_PROTECTED` (default), `VISIBILITY_PRIVATE` |
+| `thumbnail` | UUID uploadu (volitelné) |
+
+## `PUT /api/v1/character/:id/journal?entry_id=:uuid`
+
+Update existujícího zápisu — partial update.
+
+## `DELETE /api/v1/character/:id/journal?entry_id=:uuid`
+
+Smaže zápis. Jen vlastník nebo admin.
+
+## `GET /api/v1/journal/:id/like`
+
+Vrátí stav lajku konkrétního zápisu.
+
+**Odpověď:**
+
+```json
+{
+  "data": { "count": 7, "liked_by_me": true }
+}
+```
+
+## `POST /api/v1/journal/:id/like`
+
+Toggle lajku.
+
+**Odpověď:** `{ "liked": true, "count": 8, "liked_by_me": true }`.
+
+**Pravidla:**
+
+- Vlastní zápis lajkovat nelze (403).
+- Lajky pouze na PUBLIC a PROTECTED.
+
+## Validace viditelnosti
+
+Server kontroluje při GET zápisů:
+
+| `visibility` | Kdo vidí |
+|--------------|----------|
+| PUBLIC | kdokoli |
+| PROTECTED | přihlášený |
+| PRIVATE | vlastník + admin |
+
+Při neoprávněném přístupu → 404 (záměrně, aby se neprozradilo, že zápis existuje).

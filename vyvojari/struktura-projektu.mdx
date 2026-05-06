@@ -1,0 +1,89 @@
+---
+title: "Adresářová struktura"
+description: "Co kde leží a proč."
+icon: "folder-tree"
+---
+
+## `src/Core/`
+
+Jádro aplikace — věci, které jsou potřeba téměř všude.
+
+| Soubor / složka | Co dělá |
+|-----------------|---------|
+| `Auth.php` | Autentizace a session management. |
+| `Database.php` | PDO singleton pro MySQL. |
+| `Router.php` | Mapování URL na controllery (z `routes.json`). |
+| `Logger.php`, `CronLogger.php` | Logování (běžné a pro cron). |
+| `Container.php` | Lehký DI container. |
+| `Config.php` | Čte `config/*.json`. |
+| `RateLimiter.php` | Throttling per-IP. |
+| `Uuid.php` | Generování UUID. |
+| `EmailService.php`, `SmtpTransport.php` | Odesílání e-mailů. |
+| `ChallengeService.php` | 2FA challenge tokeny. |
+| `TokenService.php` | Generic tokeny (`sys_tokens`). |
+| `UserDeviceTrackerService.php` | Eviduje přihlášení / zařízení. |
+| `Achievements/` | Achievement engine (granter, checkery). |
+| `Helpers/` | Drobnosti — formátování, parser User-Agentu. |
+| `Localization/` | `Translator` a načítání jazyků. |
+| `Model/` | Entity, fasády, enums, types — datový model. |
+| `MVC/` | Base třídy pro controller / view. |
+| `OAuth2/` | `DiscordOAuthService`, `SteamOAuthService`. |
+| `Payment/` | `PayBySquare`, `SPAYD`, `LzmaEncoder`. |
+| `Scheduler/` | Cron runner, joby. |
+| `Security/` | `InputSanitizer`, `CSRF`. |
+| `Services/Dayz/` | Relay a ADM ingest. |
+| `Storage/` | Práce se soubory na disku. |
+| `Tools/` | CLI nástroje. |
+| `Upload/` | Upload validace a uložení. |
+
+## `src/Api/V1/`
+
+Každá REST endpoint má vlastní třídu (např. `CharacterApi.php`). Logika je v controllerech, serializace inline. Detail v [API reference](/vyvojari/api/uvod).
+
+## `src/auth/`
+
+Login, registrace, aktivace, recovery, 2FA. Controllers a views.
+
+## `src/user/`
+
+Cokoli, co dělá přihlášený uživatel — profil, postavy, frakce, settings.
+
+## `src/admin/`
+
+Admin panel — přehled uživatelů, postav, whitelist, webhooks, audit.
+
+## `src/public/`
+
+Veřejné stránky — profil hráče, profil frakce, čtení deníku.
+
+## `src/layouts/`
+
+Sdílené PHP šablony pro hlavičky, navigaci, dashboard.
+
+## `config/`
+
+Tři JSON soubory:
+
+- `app.json` — sekrety a hlavní konfigurace
+- `routes.json` — mapping cest
+- `api.json` — API specifické nastavení (rate limity)
+
+## `lang/`
+
+Soubory `cs_CZ.json`, `en_US.json` atd. Každý je flat objekt klíč–hodnota. Klíče s prefixem `_button.`, `_label.`, `_email.` apod.
+
+`lang/custom/` obsahuje admin overrides (přístupné z admin panelu).
+
+## `database_migrations/`
+
+SQL soubory s migracemi. Aplikují se ručně v pořadí podle názvu (žádný runner).
+
+## `uploads/`
+
+Nahrané obrázky, hymny. Struktura: `uploads/user/{user_id}/{uuid}.{ext}`.
+
+## `logs/`
+
+- `app.log` — běžné aplikační logy
+- `cron.log` — cron runner logy
+- `error.log` — PHP chyby

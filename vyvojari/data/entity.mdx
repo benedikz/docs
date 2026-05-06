@@ -1,0 +1,166 @@
+---
+title: "Entity"
+description: "Detailní popis hlavních tabulek a sloupců."
+icon: "table"
+---
+
+Pro úplnost si vždy nahlédněte do `schema.sql`. Tato stránka shrnuje hlavní entity tak, jak je používáte přes API.
+
+## `users`
+
+| Sloupec | Typ | Poznámka |
+|---------|-----|----------|
+| `id` | UUID | PK |
+| `email` | varchar | Unique |
+| `username` | varchar | Unique, lowercase trigger |
+| `password` | varchar | bcrypt |
+| `avatar` | UUID | FK → user_uploads |
+| `cover` | UUID | FK → user_uploads |
+| `anthem` | UUID | FK → user_uploads |
+| `steamid` | char(17) | Unique |
+| `dz_be_hash` | varchar | BattlEye GUID |
+| `steam_avatar` | varchar | URL |
+| `discord_id` | varchar | Unique |
+| `discord_avatar` | varchar | URL |
+| `profile_layout` | JSON | Layout settings |
+| `twofa_enabled` | bool | |
+| `twofa_secret` | varchar | (encrypted) |
+| `notify_system` | bool | default true |
+| `notify_updates` | bool | default true |
+| `scheduled_for_deletion` | datetime | nullable |
+| `verified` | bool | E-mail aktivován |
+| `active` | bool | Účet aktivní |
+| `created_at` / `updated_at` | datetime | |
+
+## `characters`
+
+| Sloupec | Typ | Poznámka |
+|---------|-----|----------|
+| `id` | UUID | PK |
+| `owner` | UUID | FK → users |
+| `face`, `first_name`, `middle_name`, `last_name`, `alias` | varchar | |
+| `age`, `nationality`, `gender`, `birth_at` | různé | povinné |
+| `morality` | UUID | FK → moralities |
+| `class` | enum | CIVILIAN/SOLDIER/MILITIA |
+| `description`, `place_of_birth`, `education`, `marital_status`, `openness` | text | |
+| `positive_traits`, `negative_traits`, `skills` | JSON | |
+| `military_*` | text | |
+| `avatar_url`, `banner_url`, `anthem_url` | varchar | |
+| `is_alive` | bool | default 1 |
+| `death_at` | datetime | nullable |
+| `death_cause` | varchar(128) | nullable |
+| `published_at` | datetime | nullable (memoriál) |
+| `status` | enum | PENDING/APPROVED/DENIED |
+| `approved_by`, `denied_by` | UUID | FK → users |
+| `denial_reason` | varchar(512) | nullable |
+| `created_at` / `updated_at` | datetime | |
+
+## `character_journals`
+
+| Sloupec | Typ |
+|---------|-----|
+| `id` | UUID |
+| `character_id` | UUID FK |
+| `title` | varchar(128) |
+| `content` | JSON |
+| `thumbnail_upload` | UUID FK |
+| `visibility` | enum |
+| `created_at` / `updated_at` / `updated_by` | meta |
+
+## `factions`
+
+| Sloupec | Typ |
+|---------|-----|
+| `id` | UUID |
+| `name` | varchar(64) unique |
+| `description` | text |
+| `type` | enum (OPEN/CLOSED) |
+| `avatar` / `cover` | UUID FK |
+| `created_by` | UUID FK |
+| `created_at` | datetime |
+
+## `user_factions`
+
+| Sloupec | Typ |
+|---------|-----|
+| `id` | UUID |
+| `user_id`, `faction_id` | FK |
+| `role` | enum (LEADER/MEMBER) |
+| `invited_by` | UUID FK |
+| `joined_at` | datetime |
+
+Unique: `(user_id, faction_id)`.
+
+## `user_uploads`
+
+| Sloupec | Typ |
+|---------|-----|
+| `id` | UUID |
+| `user_id` | FK |
+| `purpose` | enum (avatar/banner/anthem/anthem_cover/gallery/faction_avatar/faction_cover/journal_thumbnail/calendar_event) |
+| `type` | enum (images/anthems) |
+| `path` | varchar |
+| `public_url` | varchar |
+| `size` | int |
+| `created_at` | datetime |
+
+## `sys_tokens`
+
+| Sloupec | Typ |
+|---------|-----|
+| `id` | UUID |
+| `token` | varchar(32) |
+| `type` | enum (TYPE_ACTIVATION/TYPE_RECOVERY/TYPE_CHALLENGE/TYPE_INTEGRATION_*/TYPE_EMAIL_CHANGE) |
+| `user_id` | FK |
+| `extra` | varchar (např. nový e-mail) |
+| `expires_at` | datetime |
+| `created_at` | datetime |
+
+## `notifications`
+
+| Sloupec | Typ |
+|---------|-----|
+| `id` | UUID |
+| `recipient_id` | FK |
+| `active` | bool |
+| `content` | JSON |
+| `created_at` / `created_by` / `updated_at` / `updated_by` | meta |
+
+## `user_devices`
+
+| Sloupec | Typ |
+|---------|-----|
+| `id` | UUID |
+| `user_id` | FK |
+| `session_hash` | char(64) — SHA-256 cookie |
+| `ip_address`, `user_agent` | varchar |
+| `device_type`, `browser_name`, `browser_version`, `os_name`, `os_version` | varchar |
+| `last_active_at`, `created_at` | datetime |
+| `is_current` | bool |
+
+## `user_activities`
+
+Audit log.
+
+| Sloupec | Typ |
+|---------|-----|
+| `id` | UUID |
+| `user_id` | FK |
+| `type` | varchar (`character_created`, `whitelist_submitted`, …) |
+| `context` | JSON |
+| `created_at` | datetime |
+
+Index `(user_id, created_at)` pro listing.
+
+## `user_consents`
+
+GDPR — souhlas s podmínkami.
+
+| Sloupec | Typ |
+|---------|-----|
+| `id` | UUID |
+| `user_id` | FK |
+| `consent_type` | enum (TERMS_OF_SERVICE/PRIVACY_POLICY) |
+| `document_version`, `document_hash` | varchar |
+| `ip_address`, `user_agent` | varchar |
+| `given_at` | datetime |

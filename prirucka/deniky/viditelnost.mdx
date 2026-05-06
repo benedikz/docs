@@ -1,0 +1,50 @@
+---
+title: "Viditelnost zápisů"
+description: "Tři režimy přístupu — kdo zápis uvidí a kdo ne."
+icon: "eye"
+---
+
+Každý zápis má jednu z tří viditelností. Volíte ji při vytvoření a kdykoli ji můžete změnit.
+
+## Režimy
+
+<CardGroup cols={3}>
+  <Card title="PUBLIC" icon="globe">
+    Vidí kdokoli, i nepřihlášený návštěvník. Vhodné pro zveřejnění RP příběhu.
+  </Card>
+  <Card title="PROTECTED" icon="users">
+    Vidí pouze **přihlášení** uživatelé. Default.
+  </Card>
+  <Card title="PRIVATE" icon="lock">
+    Vidí pouze majitel postavy a admin.
+  </Card>
+</CardGroup>
+
+## Doporučení
+
+| Situace | Doporučená viditelnost |
+|---------|------------------------|
+| Zveřejněný RP příběh / propagace postavy | PUBLIC |
+| Běžné zápisy pro komunitu | PROTECTED |
+| Tajné události, výhradní lore | PRIVATE |
+| Memoriál mrtvé postavy | PUBLIC |
+
+## Změna viditelnosti
+
+V editoru zápisu klikněte na ikonu zámku/oka a zvolte jinou hodnotu. Změna se aplikuje okamžitě — přístup čtenáře se vyhodnocuje při každém načtení.
+
+## Co kdo přesně vidí
+
+| Viditelnost | Nepřihlášený | Přihlášený | Vlastník | Admin |
+|-------------|--------------|------------|----------|-------|
+| PUBLIC      | ✓            | ✓          | ✓        | ✓ |
+| PROTECTED   | ✗            | ✓          | ✓        | ✓ |
+| PRIVATE     | ✗            | ✗          | ✓        | ✓ |
+
+<Note>
+Admini mají přístup ke všem zápisům včetně PRIVATE. Slouží to pro moderaci obsahu (např. ověření porušení pravidel).
+</Note>
+
+## Lajky a viditelnost
+
+Lajky lze dávat pouze na PUBLIC a PROTECTED zápisy. Vlastní zápisy si lajkovat nemůžete.

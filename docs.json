@@ -1,8 +1,8 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
-  "name": "Product Guide",
-  "description": "Step-by-step guides for every product—platform setup, analytics, and integrations in one place.",
+  "name": "DAYZERO Portal",
+  "description": "Kompletní průvodce a vývojářská dokumentace DAYZERO Portálu — RP komunální platformy pro DayZ.",
   "colors": {
     "primary": "#166E3F",
     "light": "#26BD6C",
@@ -19,21 +19,246 @@
     "options": ["copy", "view", "assistant", "mcp", "add-mcp"]
   },
   "navigation": {
-    "directory": "card",
-    "groups": []
+    "tabs": [
+      {
+        "tab": "Začínáme",
+        "icon": "rocket",
+        "groups": [
+          {
+            "group": "Vítejte",
+            "pages": [
+              "zaciname/uvod",
+              "zaciname/co-je-dayzero",
+              "zaciname/slovnicek"
+            ]
+          },
+          {
+            "group": "Vytvoření účtu",
+            "pages": [
+              "zaciname/registrace",
+              "zaciname/aktivace",
+              "zaciname/prihlaseni",
+              "zaciname/dvoufaktorove-overeni"
+            ]
+          },
+          {
+            "group": "Propojení účtů",
+            "pages": [
+              "zaciname/propojeni-discord",
+              "zaciname/propojeni-steam"
+            ]
+          },
+          {
+            "group": "První kroky",
+            "pages": [
+              "zaciname/prvni-kroky",
+              "zaciname/whitelist-zadost",
+              "zaciname/prvni-postava"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Uživatelská příručka",
+        "icon": "book-open",
+        "groups": [
+          {
+            "group": "Účet a profil",
+            "pages": [
+              "prirucka/ucet/profil",
+              "prirucka/ucet/avatar-banner",
+              "prirucka/ucet/hymna",
+              "prirucka/ucet/layout-profilu"
+            ]
+          },
+          {
+            "group": "Bezpečnost a soukromí",
+            "pages": [
+              "prirucka/bezpecnost/zmena-hesla",
+              "prirucka/bezpecnost/2fa",
+              "prirucka/bezpecnost/zmena-emailu",
+              "prirucka/bezpecnost/sprava-zarizeni",
+              "prirucka/bezpecnost/notifikace",
+              "prirucka/bezpecnost/export-dat",
+              "prirucka/bezpecnost/smazani-uctu"
+            ]
+          },
+          {
+            "group": "Postavy",
+            "pages": [
+              "prirucka/postavy/prehled",
+              "prirucka/postavy/vytvoreni",
+              "prirucka/postavy/pole-postavy",
+              "prirucka/postavy/schvalovani",
+              "prirucka/postavy/uprava",
+              "prirucka/postavy/smrt",
+              "prirucka/postavy/publikace-mrtve"
+            ]
+          },
+          {
+            "group": "Deníky postav",
+            "pages": [
+              "prirucka/deniky/prehled",
+              "prirucka/deniky/zapis",
+              "prirucka/deniky/viditelnost",
+              "prirucka/deniky/lajky"
+            ]
+          },
+          {
+            "group": "Frakce",
+            "pages": [
+              "prirucka/frakce/prehled",
+              "prirucka/frakce/vytvoreni",
+              "prirucka/frakce/typy",
+              "prirucka/frakce/pozvanky",
+              "prirucka/frakce/clenove",
+              "prirucka/frakce/opusteni",
+              "prirucka/frakce/rozpusteni",
+              "prirucka/frakce/galerie",
+              "prirucka/frakce/denik"
+            ]
+          },
+          {
+            "group": "Komunita",
+            "pages": [
+              "prirucka/komunita/vyhledavani",
+              "prirucka/komunita/sledovani",
+              "prirucka/komunita/reputace",
+              "prirucka/komunita/galerie",
+              "prirucka/komunita/achievementy"
+            ]
+          },
+          {
+            "group": "Whitelist",
+            "pages": [
+              "prirucka/whitelist/prehled",
+              "prirucka/whitelist/podani",
+              "prirucka/whitelist/stav"
+            ]
+          },
+          {
+            "group": "Beans a podpora",
+            "pages": [
+              "prirucka/beans/prehled",
+              "prirucka/beans/ziskavani",
+              "prirucka/podpora/darcovstvi"
+            ]
+          },
+          {
+            "group": "Kalendář akcí",
+            "pages": [
+              "prirucka/kalendar"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Pro vývojáře",
+        "icon": "code",
+        "groups": [
+          {
+            "group": "Architektura",
+            "pages": [
+              "vyvojari/architektura",
+              "vyvojari/struktura-projektu",
+              "vyvojari/konfigurace",
+              "vyvojari/routing"
+            ]
+          },
+          {
+            "group": "REST API",
+            "pages": [
+              "vyvojari/api/uvod",
+              "vyvojari/api/autentizace",
+              "vyvojari/api/format-odpovedi",
+              "vyvojari/api/chyby",
+              "vyvojari/api/rate-limiting"
+            ]
+          },
+          {
+            "group": "API reference",
+            "pages": [
+              "vyvojari/api/reference/auth",
+              "vyvojari/api/reference/users",
+              "vyvojari/api/reference/characters",
+              "vyvojari/api/reference/character-journals",
+              "vyvojari/api/reference/factions",
+              "vyvojari/api/reference/faction-invites",
+              "vyvojari/api/reference/faction-journal",
+              "vyvojari/api/reference/faction-gallery",
+              "vyvojari/api/reference/achievements",
+              "vyvojari/api/reference/gallery",
+              "vyvojari/api/reference/anthems",
+              "vyvojari/api/reference/notifications",
+              "vyvojari/api/reference/follows",
+              "vyvojari/api/reference/reputations",
+              "vyvojari/api/reference/whitelist",
+              "vyvojari/api/reference/calendar",
+              "vyvojari/api/reference/beans",
+              "vyvojari/api/reference/support",
+              "vyvojari/api/reference/admin"
+            ]
+          },
+          {
+            "group": "Datový model",
+            "pages": [
+              "vyvojari/data/prehled",
+              "vyvojari/data/entity",
+              "vyvojari/data/enumy"
+            ]
+          },
+          {
+            "group": "OAuth integrace",
+            "pages": [
+              "vyvojari/oauth/discord",
+              "vyvojari/oauth/steam"
+            ]
+          },
+          {
+            "group": "DayZ integrace",
+            "pages": [
+              "vyvojari/dayz/prehled",
+              "vyvojari/dayz/relay-format",
+              "vyvojari/dayz/ingest",
+              "vyvojari/dayz/adm-logy"
+            ]
+          },
+          {
+            "group": "Subsystémy",
+            "pages": [
+              "vyvojari/subsystemy/achievementy",
+              "vyvojari/subsystemy/webhooks",
+              "vyvojari/subsystemy/cron",
+              "vyvojari/subsystemy/lokalizace",
+              "vyvojari/subsystemy/upload",
+              "vyvojari/subsystemy/email",
+              "vyvojari/subsystemy/bezpecnost"
+            ]
+          }
+        ]
+      }
+    ]
   },
-  "logo": "/logo/light.svg",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/light.svg"
+  },
   "navbar": {
-    "links": [],
+    "links": [
+      {
+        "label": "Portál",
+        "href": "https://dayzero.cz/portal"
+      }
+    ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Discord",
+      "href": "https://discord.gg/dayzero"
     }
   },
   "footer": {
     "socials": {
-      "linkedin": "https://linkedin.com/company/yourcompany"
+      "discord": "https://discord.gg/dayzero"
     }
   },
   "fonts": {

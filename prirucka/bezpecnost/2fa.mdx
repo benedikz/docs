@@ -1,0 +1,58 @@
+---
+title: "Dvoufaktorové ověření"
+description: "Detailní popis 2FA — zapnutí, vypnutí, přihlášení s kódem a obnova přístupu."
+icon: "shield-check"
+---
+
+Dvoufaktorové ověření přidává druhou vrstvu zabezpečení. Po zadání hesla portál vystaví **6místný kód** a pošle ho e-mailem. Bez něj se nikdo (ani s vaším heslem) nepřihlásí.
+
+Stručný úvod najdete v sekci [Začínáme → 2FA](/zaciname/dvoufaktorove-overeni). Tady jsou detaily.
+
+## Zapnutí
+
+V **Nastavení → Bezpečnost** přepněte **Dvoufaktorové ověření** na zapnuté. Portál si vyžádá heslo pro potvrzení a od toho okamžiku se 2FA aktivuje pro všechna nová přihlášení. Stávající přihlášení nejsou ovlivněna.
+
+## Průběh přihlášení
+
+<Steps>
+  <Step title="Zadání hesla">
+    Vyplníte uživatelské jméno a heslo.
+  </Step>
+  <Step title="Vystavení kódu">
+    Server vystaví **challenge token** a pošle 6místný OTP kód na váš e-mail. Platnost: **30 minut**.
+  </Step>
+  <Step title="Zadání kódu">
+    Kód opíšete do formuláře. Pokud se trefíte, vznikne session a jste přihlášeni.
+  </Step>
+</Steps>
+
+## Vypnutí
+
+Stejnou cestou v **Nastavení → Bezpečnost** přepněte vypínač zpět. Portál si vyžádá heslo. Pokud byste 2FA chtěli dočasně vypnout (např. před dovolenou bez přístupu k e-mailu), počítejte s tím, že snížíte ochranu účtu.
+
+## Když ztratíte přístup
+
+<Warning>
+Bez přístupu k e-mailu a bez 2FA kódu se nepřihlásíte. Pojistku nezadržíte automaticky — kontaktujte admina.
+</Warning>
+
+Postup obnovy:
+
+1. **Domluvte se s adminem** přes Discord (nejlépe na komunálním serveru DAYZERO).
+2. Admin si ověří vaši identitu (např. ověřením přes Steam profil).
+3. Admin dočasně vypne 2FA na vašem účtu.
+4. Po přihlášení si nastavte nový e-mail a 2FA znovu zapněte.
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Můžu kód poslat na jiný e-mail než ten registrační?">
+    Ne. Kód jde vždy na e-mail spojený s účtem. Pokud chcete použít jiný, [změňte e-mail](/prirucka/bezpecnost/zmena-emailu) ještě než 2FA zapnete.
+  </Accordion>
+  <Accordion title="Kolik kódů můžu vyžádat?">
+    Není pevný limit, ale platí rate limit (přibližně 30 požadavků za minutu z jedné IP). Při zneužívání systém další požadavky odmítne.
+  </Accordion>
+  <Accordion title="Funguje 2FA i pro přihlášení Discordem / Steamem?">
+    Ne. OAuth přihlášení 2FA krok přeskočí, protože identitu ověřuje externí poskytovatel. Pokud chcete vyšší ochranu, mějte 2FA i na Discordu / Steamu.
+  </Accordion>
+</AccordionGroup>

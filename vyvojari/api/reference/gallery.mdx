@@ -1,0 +1,52 @@
+---
+title: "Gallery"
+description: "Uživatelská galerie a lajky."
+icon: "image"
+---
+
+## `GET /api/v1/user/:user_id/gallery`
+
+Seznam fotek uživatele.
+
+**Query:** `page`, `limit`.
+
+**Odpověď:** items s `likes.count`, `likes.liked_by_me`.
+
+## `POST /api/v1/user/:user_id/gallery`
+
+Upload obrázku.
+
+**Content-Type:** `multipart/form-data`.
+
+**Pole:**
+
+| Pole | Typ |
+|------|-----|
+| `image` | JPG/JPEG/PNG/GIF, max 5 MB |
+| `title` | max 64 |
+| `description` | volitelné |
+| `ai_label` | boolean |
+
+**Pravidla:** Volat může jen vlastník.
+
+## `GET /api/v1/user/:user_id/gallery/i/:id`
+
+Detail obrázku.
+
+## `DELETE /api/v1/user/:user_id/gallery/i/:id`
+
+Smaže obrázek. Vlastník nebo admin.
+
+## `GET /api/v1/user/:user_id/gallery/i/:item_id/like`
+
+Stav lajku (count, liked_by_me).
+
+## `POST /api/v1/user/:user_id/gallery/i/:item_id/like`
+
+Toggle lajku.
+
+**Pravidla:** Vlastní obrázek nelze lajkovat.
+
+## Storage
+
+Soubory jsou uloženy v `uploads/user/{user_id}/{uuid}.{ext}`. Záznam metadat v tabulce `user_gallery_items`. Public URL se konstruuje z `upload.public_url` (`config/app.json`).

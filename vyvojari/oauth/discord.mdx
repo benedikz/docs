@@ -1,0 +1,77 @@
+---
+title: "Discord OAuth2"
+description: "Konfigurace a flow pro Discord přihlášení."
+icon: "message-circle"
+---
+
+Implementace v `src/Core/OAuth2/DiscordOAuthService.php`.
+
+## Konfigurace
+
+V `config/app.json`:
+
+```json
+{
+  "oauth2": {
+    "discord": {
+      "client_id": "...",
+      "client_secret": "...",
+      "redirect_uri": "https://dayzero.cz/portal/api/v1/auth/providers/discord?action=callback",
+      "scopes": "identify email guilds.join"
+    }
+  }
+}
+```
+
+## Discord aplikace
+
+1. V [Discord Developer Portal](https://discord.com/developers/applications) vytvořte aplikaci.
+2. V sekci **OAuth2** přidejte redirect URI z `app.json`.
+3. Vygenerujte client secret a uložte do `app.json`.
+4. Pokud máte DAYZERO Discord guild a chcete uživatele automaticky přidávat, povolte scope `guilds.join` a aplikaci pozvete na guild s odpovídajícími právy.
+
+## Flow
+
+### Login
+
+```
+1. GET /api/v1/auth/providers/discord?action=login
+2. Server redirect → https://discord.com/api/oauth2/authorize?...
+3. Uživatel autorizuje
+4. Discord redirect → /api/v1/auth/providers/discord?action=callback&code=...
+5. Server volá POST https://discord.com/api/oauth2/token
+6. Vrácený access_token použije pro GET /users/@me
+7. Server vyhledá / vytvoří účet podle discord_id
+8. Login + redirect na portál
+```
+
+### Link
+
+Stejný flow jako login, jen vyžaduje session uživatele. Po callbacku se discord_id přiřadí ke stávajícímu účtu.
+
+## Načítaná pole
+
+Z `/users/@me`:
+
+- `id` → `users.discord_id`
+- `username`, `global_name` → display
+- `avatar` → `users.discord_avatar` (URL `https://cdn.discordapp.com/avatars/{id}/{hash}.png`)
+- `email` → `users.email` (jen při vytváření nového účtu)
+
+## Bezpečnostní tipy
+
+<Warning>
+`client_secret` nikdy necommitujte do gitu. Pokud unikne, neprodleně ho rotujte v Discord Developer Portal.
+</Warning>
+
+<Tip>
+Stav OAuth je volitelně chráněn parametrem `state` (CSRF-like). V implementaci je session-based ověření, ale doporučujeme přidat i explicit state token.
+</Tip>
+
+## Časté chyby
+
+| Symptom | Řešení |
+|---------|--------|
+| Discord vrátí `redirect_uri_mismatch` | URI v Developer Portal a v `app.json` musí být **přesně shodné** (i lomítka). |
+| Token expired | `access_token` z Discordu je krátkodobý; flow ho ihned konzumuje. |
+| `Insufficient scopes` | Pokud volby přidáte (`guilds.join`), uživatel musí znovu autorizovat. |

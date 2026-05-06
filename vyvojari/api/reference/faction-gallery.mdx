@@ -1,0 +1,40 @@
+---
+title: "Faction Gallery"
+description: "Společná galerie celé frakce."
+icon: "images"
+---
+
+## `GET /api/v1/faction/:id/gallery`
+
+Seznam obrázků ve frakční galerii. Stránkování standardní (`page`, `limit`).
+
+## `POST /api/v1/faction/:id/gallery`
+
+Upload obrázku do galerie.
+
+**Content-Type:** `multipart/form-data`
+
+**Pole:**
+
+| Pole | Typ |
+|------|-----|
+| `image` | binární soubor (JPG/JPEG/PNG/GIF, max 5 MB) |
+| `title` | string, max 64 |
+| `description` | string, volitelný |
+| `ai_label` | boolean, volitelný |
+
+**Pravidla:** Autor musí být členem frakce.
+
+## `GET /api/v1/faction/:id/gallery/i/:item_id`
+
+Detail jednoho obrázku.
+
+## `DELETE /api/v1/faction/:id/gallery/i/:item_id`
+
+Smaže obrázek.
+
+**Pravidla:** Smazat může autor, LEADER nebo admin.
+
+## Lajky
+
+Endpointy `GET/POST /api/v1/faction/:id/gallery/i/:item_id/like` (analogicky k user gallery).

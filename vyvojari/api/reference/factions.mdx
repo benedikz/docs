@@ -1,0 +1,77 @@
+---
+title: "Factions"
+description: "CRUD frakce a správa členství."
+icon: "shield"
+---
+
+## `GET /api/v1/factions`
+
+Seznam frakcí.
+
+**Query:**
+
+| Parametr | Default | Význam |
+|----------|---------|--------|
+| `type` | — | `OPEN` vrátí jen veřejně viditelné. |
+| `offset` | 0 | Posun |
+| `limit` | 20 (max 50) | Velikost |
+
+**Odpověď:** `data.items[]` se členy a `member_count`.
+
+## `GET /api/v1/faction/:id`
+
+Detail frakce.
+
+## `POST /api/v1/factions`
+
+Vytvoření frakce.
+
+**Body:**
+
+| Pole | Typ |
+|------|-----|
+| `name` | 1–64, unikátní |
+| `type` | `OPEN` / `CLOSED` (default `CLOSED`) |
+| `description` | max 512 (volitelné) |
+| `avatar_id` | UUID uploadu (volitelné) |
+| `cover_id` | UUID uploadu (volitelné) |
+
+**Pravidla:** uživatel nesmí být v jiné frakci (jinak 409).
+
+**Efekt:** zakladatel se stává `LEADER`.
+
+## `PUT /api/v1/faction/:id`
+
+Update frakce. Jen LEADER.
+
+**Pole:** `name`, `description`, `type`, `avatar_id`, `cover_id`.
+
+## `DELETE /api/v1/faction/:id`
+
+Rozpuštění frakce.
+
+| Role | Podmínka |
+|------|----------|
+| LEADER | Pouze pokud je sám ve frakci. |
+| ADMIN | Bez omezení. |
+
+## `GET /api/v1/faction/:id/members`
+
+Seznam členů. Vrací `user_id`, `role`, `joined_at`, `invited_by`.
+
+## `PUT /api/v1/faction/:id/members`
+
+Změna role člena (typicky předání vedení).
+
+**Body:** `{ "user_id": "...", "role": "LEADER" }`
+
+**Pravidla:** Jen aktuální LEADER. Po předání ztrácí LEADER roli, stává se MEMBER.
+
+## `DELETE /api/v1/faction/:id/members`
+
+Vystoupení nebo vykopnutí.
+
+**Body bez `user_id`** (vyplníte vlastní): vlastní opuštění.
+**Body s `user_id`**: vykopnutí (jen LEADER).
+
+**Pravidla:** LEADER nemůže opustit, pokud má další členy.

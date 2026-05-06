@@ -1,0 +1,90 @@
+---
+title: "Webhooky"
+description: "Odchozí HTTP notifikace o událostech (typicky Discord)."
+icon: "webhook"
+---
+
+Webhook = HTTP POST, který portál pošle na předem nakonfigurovaný URL při určité události. Slouží pro propojení s Discordem, Slackem nebo libovolným externím systémem.
+
+Spravovatelné jen z admin panelu nebo přes [admin endpointy](/vyvojari/api/reference/admin).
+
+## Eventy
+
+| Event | Trigger |
+|-------|---------|
+| `character.death` | Postava označena jako mrtvá |
+| `character.created` | Vytvoření nové postavy |
+| `character.approved` | Schválení postavy |
+| `calendar.event.created` | Nová akce v kalendáři |
+| `whitelist.submitted` | Nová whitelist žádost |
+| `whitelist.reviewed` | Schválena/zamítnuta whitelist žádost |
+| `user.registered` | Nový uživatel zaregistrován |
+
+## Šablona zprávy
+
+Webhook má `template` — string s placeholdery. Při firingu se nahradí hodnotami:
+
+```
+Postava {character.name} zemřela: {death_cause}.
+```
+
+Známé placeholdery podle eventu (např. pro `character.death`):
+
+- `{character.name}`, `{character.id}`
+- `{death_cause}`, `{death_at}`
+- `{user.username}`, `{user.id}`
+- `{steamid}`
+
+## Discord webhook
+
+Pokud cíl URL je Discord webhook, doporučujeme template:
+
+```
+**{character.name}** ({user.username}) zemřel.
+**Příčina:** {death_cause}
+```
+
+Discord parses Markdown, takže `**` udělá tučné.
+
+## Ošetření chyb
+
+- Pokud webhook URL nedostupné, retry až 3× s exponenciálním backoffem.
+- Po neúspěchu se logga chyba do `logs/app.log` a webhook **se nedeaktivuje** (musíte ručně).
+- 404 / 410 z cíle = automatická deaktivace (Discord webhook smazán).
+
+## Bezpečnost
+
+- Webhook URL je tajný — kdokoli s ním může posílat zprávy do cíle.
+- V admin panelu se URL po uložení částečně skrývá.
+- HTTPS pouze (HTTP nebude přijato).
+
+## Datový model
+
+Tabulka `config_webhooks`:
+
+| Sloupec | Typ |
+|---------|-----|
+| `id` | UUID |
+| `event` | string |
+| `url` | string (HTTPS) |
+| `name` | varchar(64) |
+| `template` | text |
+| `enabled` | bool |
+| `created_at`, `created_by` | meta |
+
+## Vlastní cíl (non-Discord)
+
+Pokud chcete vlastní endpoint (custom backend), webhook obdržíte jako:
+
+```http
+POST <url> HTTP/1.1
+Content-Type: application/json
+
+{
+  "event": "character.death",
+  "data": { "character": {...}, "death_cause": "...", "user": {...} },
+  "rendered": "Postava Pepa zemřela: ..."
+}
+```
+
+Field `rendered` je naformátovaná verze podle `template`. `data` je raw payload.

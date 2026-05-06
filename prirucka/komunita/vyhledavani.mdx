@@ -1,0 +1,47 @@
+---
+title: "Vyhledávání hráčů"
+description: "Najděte ostatní uživatele podle uživatelského jména nebo členství ve frakci."
+icon: "search"
+---
+
+Sekce **Hráči** (`/u/users`) ukazuje seznam všech aktivních uživatelů. Můžete v něm hledat, filtrovat a přejít na konkrétní profil.
+
+## Co se zobrazí
+
+| Údaj | Viditelný |
+|------|-----------|
+| Avatar | ✓ |
+| Uživatelské jméno | ✓ |
+| Datum registrace | ✓ |
+| Frakce (pokud je) | ✓ (s odkazem) |
+| E-mail | ✗ (jen admini) |
+
+## Filtry
+
+### Hledání podle jména
+
+Pole `q` filtruje podle username (substring match). Funguje i pro části jmen.
+
+### Bez frakce
+
+Volba **Hráči bez frakce** ukáže pouze ty, kteří v žádné nejsou. Užitečné, pokud LEADER hledá nové členy. (Vyžaduje přihlášení.)
+
+### Stránkování
+
+Default 10 záznamů na stránku. V URL můžete přepsat `limit`, případně `page`.
+
+## Co s konkrétním profilem
+
+Klikem na avatar nebo jméno se otevře `/u/{username}`. Tam můžete:
+
+- Sledovat ([Sledování](/prirucka/komunita/sledovani))
+- Dát [reputaci](/prirucka/komunita/reputace)
+- Procházet jeho postavy a deníky (pokud má PUBLIC)
+
+<Tip>
+Vyhledávač hledá jen v aktivních účtech. Smazané nebo plánované k smazání nezobrazuje.
+</Tip>
+
+## Z pohledu vývojáře
+
+Endpoint `GET /api/v1/users` přijímá `q`, `page`, `limit`, případně `no_faction=1`. Detail v [API referenci](/vyvojari/api/reference/users).

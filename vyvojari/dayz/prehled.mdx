@@ -1,0 +1,88 @@
+---
+title: "DayZ integrace — přehled"
+description: "Jak se data z herního serveru dostávají do portálu."
+icon: "gamepad-2"
+---
+
+Portál sám hru neřídí. Sleduje ji jen jednosměrně přes **logy**, které herní server průběžně zapisuje a portál je sklízí.
+
+## Datové cesty
+
+```
+DayZ server  ──── relay (NDJSON, .jsonl)  ──┐
+            └─── ADM logy (legacy)  ────────┼──► SFTP server
+                                            │
+Portál ◄── poll SFTP každých 5 min (relay) ─┘
+       ◄── poll SFTP každou hodinu (ADM)
+```
+
+## Dvě generace logů
+
+| Formát | Typ | Stav | Detail |
+|--------|-----|------|--------|
+| **Relay** | NDJSON (`.jsonl`) | Aktuální | [Relay Format](/vyvojari/dayz/relay-format) |
+| **ADM** | Plain text (`.ADM`) | Legacy / fallback | [ADM logy](/vyvojari/dayz/adm-logy) |
+
+Relay je strukturovaný, lehko parsovatelný a zachycuje víc událostí. ADM je výchozí DayZ formát, který používáme pro starší / nepokryté události.
+
+## Hlavní eventy v relay
+
+- `BOOT` — start serveru
+- `CONN` / `DISC` — connect / disconnect hráče
+- `POS` — pozice (heatmapa)
+- `VITAL` — health snapshot (HP, blood, hunger, thirst…)
+- `SHOT` — výstřel
+- `DMG` — udělené poškození
+- `KILL` — smrt hráče
+- `ZKILL` — zabití zombie
+
+## Co se s daty děje
+
+<Steps>
+  <Step title="Discovery">
+    `RelayIngestJob` se připojí na SFTP, najde nové soubory `relay_YYYY-MM-DD.jsonl`.
+  </Step>
+  <Step title="Parsing">
+    `JsonLineDecoder` čte řádek po řádku. Malformované JSON ignoruje, neznámé eventy přeskakuje (forward-compat).
+  </Step>
+  <Step title="Dispatch">
+    `EventDispatcher` posílá event na odpovídající *sink* podle typu.
+  </Step>
+  <Step title="Storage">
+    Sinks zapíší data do tabulek (`user_sessions`, privátní DayZ tabulky).
+  </Step>
+  <Step title="Achievementy & statistiky">
+    Při běhu `AchievementCheckJob` (hodinově) se z těchto dat vyhodnocují odznaky a souhrnné statistiky.
+  </Step>
+</Steps>
+
+## Mapování hráče
+
+Hlavním klíčem je **Steam64 ID**. Při relay eventu (`id` field):
+
+1. Hledá se `users.steamid` shoda.
+2. Pokud existuje, eventy se přiřadí k uživateli.
+3. Pokud ne, eventy se zapíší jako orphans (admin si je může propojit ručně).
+
+## Spuštění ručně
+
+Pro debug nebo manuální import existují admin endpointy:
+
+- `POST /api/v1/admin/relay-ingest` — upload NDJSON souboru
+- `POST /api/v1/admin/adm-ingest` — upload .ADM souboru
+
+Cron joby zůstávají defaultním způsobem ingestu.
+
+## Související
+
+<CardGroup cols={2}>
+  <Card title="Relay formát" icon="file-json" href="/vyvojari/dayz/relay-format">
+    Detailní spec eventů.
+  </Card>
+  <Card title="Ingest pipeline" icon="cog" href="/vyvojari/dayz/ingest">
+    Implementace v PHP.
+  </Card>
+  <Card title="ADM logy" icon="file-text" href="/vyvojari/dayz/adm-logy">
+    Legacy formát.
+  </Card>
+</CardGroup>

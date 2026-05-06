@@ -1,0 +1,108 @@
+---
+title: "Cron joby"
+description: "Plánované úlohy a runner."
+icon: "clock"
+---
+
+Cron joby běží mimo HTTP request — jsou orchestrované systémovým cronem, který volá `cron.php?key=<secret>` v pravidelných intervalech.
+
+## Architektura
+
+```
+crontab (system)
+   │
+   └─> wget / curl https://dayzero.cz/portal/cron.php?key=<secret>
+                                    │
+                                    ↓
+                          cron.php (PHP entry)
+                                    │
+                                    ├── ověří klíč
+                                    ├── získá .cron.lock (file lock proti dvojímu běhu)
+                                    │
+                                    └── JobRunner::runDue()
+                                            │
+                                            └── pro každý due job: JobInterface::execute()
+```
+
+## `JobInterface`
+
+```php
+namespace App\Core\Scheduler;
+
+interface JobInterface {
+    public function getName(): string;
+    public function shouldRun(): bool;
+    public function execute(bool $dryRun = false): void;
+}
+```
+
+## Vestavěné joby
+
+| Job | Frekvence | Účel |
+|-----|-----------|------|
+| `AchievementCheckJob` | hodinově | Kontrola a udělování achievementů |
+| `RelayIngestJob` | každých 5 min | Sklízí NDJSON relay logy z DayZ serveru |
+| `AdmIngestJob` | hodinově | Sklízí .ADM legacy logy |
+| `WhitelistSyncJob` | denně | Export schválených Steam ID na herní server |
+| `PaymentCheckJob` | každých 30 min | FIO Bank API → kontrola příchozích plateb |
+| `UserRemovalJob` | denně | Fyzické smazání účtů po grace period |
+| `LogRetentionJob` | týdně | Mazání logů starších než 30 dní |
+
+## `cron.php`
+
+```bash
+GET /portal/cron.php?key=<cron_secret>
+```
+
+Odpověď je plain text se shrnutím (pro debug a monitoring):
+
+```
+[2025-05-01 04:00:01] Lock acquired
+[2025-05-01 04:00:01] AchievementCheckJob: 12 grants, took 1.2s
+[2025-05-01 04:00:02] PaymentCheckJob: 0 new payments
+[2025-05-01 04:00:02] Lock released
+```
+
+## Lock
+
+Soubor `.cron.lock` v rootu portálu drží exkluzivní zámek (PHP `flock()`). Pokud běží jiná instance, druhá ihned skončí (žádné čekání).
+
+## Manuální spuštění konkrétního jobu
+
+```bash
+GET /portal/cron.php?key=<secret>&job=RelayIngestJob
+```
+
+Volitelně `&dry_run=1`.
+
+## Logování
+
+- `logs/cron.log` — denní výstup runneru
+- `logs/cron.error.log` — výjimky a fatal errors
+
+`Core/CronLogger.php` se postará o formát.
+
+## Crontab příklad
+
+```
+*/5 * * * * curl -s "https://dayzero.cz/portal/cron.php?key=<secret>" >> /home/.../cron.out 2>&1
+```
+
+Frekvence v crontabu je 5 minut. Joby se vyhodnocují interně podle vlastní `shouldRun()` (např. denní job se spustí jen 1× denně).
+
+## Přidání nového jobu
+
+<Steps>
+  <Step title="Vytvořte třídu v src/Core/Scheduler/Jobs/">
+    Implementujte `JobInterface`.
+  </Step>
+  <Step title="Zaregistrujte v JobRegistry">
+    Singleton, který drží seznam všech jobů.
+  </Step>
+  <Step title="Otestujte přes ?job=...&dry_run=1">
+    Bezpečně si ověřte chování.
+  </Step>
+  <Step title="Nasaďte do produkce">
+    Spuštění už řeší `runDue()` — žádný další zásah do crontabu nepotřebujete.
+  </Step>
+</Steps>

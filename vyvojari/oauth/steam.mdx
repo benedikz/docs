@@ -1,0 +1,66 @@
+---
+title: "Steam OpenID"
+description: "Konfigurace a flow pro Steam přihlášení."
+icon: "gamepad-2"
+---
+
+Implementace v `src/Core/OAuth2/SteamOAuthService.php`. Steam **nepoužívá** OAuth2, ale stále podporovaný **OpenID 2.0**.
+
+## Konfigurace
+
+```json
+{
+  "oauth2": {
+    "steam": {
+      "api_key": "...",
+      "redirect_uri": "https://dayzero.cz/portal/api/v1/auth/providers/steam?action=callback"
+    }
+  }
+}
+```
+
+`api_key` získáte na [Steam Web API key](https://steamcommunity.com/dev/apikey). Slouží pro načítání public profilu (avatar, jméno).
+
+## Flow
+
+### Login / link
+
+```
+1. GET /api/v1/auth/providers/steam?action=login
+2. Server redirect → https://steamcommunity.com/openid/login?...
+3. Uživatel přihlásí na Steamu
+4. Steam redirect → /api/v1/auth/providers/steam?action=callback&openid.*
+5. Server validuje OpenID assertion (volá Steam zpět pro check_authentication)
+6. Z claimed_id extrahuje Steam64 ID
+7. Volá GET https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/...
+8. Načte avatar URL, persona name
+9. Vytvoří/přiřadí účet, login, redirect
+```
+
+## Načítaná pole
+
+- `steamid` (17místné Steam64) → `users.steamid`
+- `personaname` → display
+- `avatarfull` URL → `users.steam_avatar`
+
+## BattlEye GUID
+
+Z Steam64 se počítá `dz_be_hash`:
+
+```
+md5("BE" + little_endian_hex(steamid64))
+```
+
+Implementace v `Core/Helpers/BattleEyeHelper::computeGuid()`. Slouží pro mapování s herním serverem.
+
+## Whitelist
+
+Steam64 se pak používá pro `WhitelistSyncJob` — exportuje schválené hráče na herní server.
+
+## Časté chyby
+
+| Symptom | Řešení |
+|---------|--------|
+| `Invalid OpenID assertion` | Server musí volat Steam pro check_authentication. Pokud máte za proxy, ověřte, že request odchází přes IPv4. |
+| `Steam ID už používá jiný účet` | Někdo si profil propojil dříve. Vyřešte přes admina (sjednocení účtů). |
+| Nezískává se avatar | API key je špatný nebo profil je nastaven jako private. |

@@ -1,0 +1,102 @@
+---
+title: "Achievements engine"
+description: "Architektura systému odznaků."
+icon: "trophy"
+---
+
+Implementace v `src/Core/Achievements/`. Engine je čisté Strategy pattern — každý achievement = jeden checker.
+
+## Komponenty
+
+```
+AchievementGranter      ←  orchestrace (grant / revoke / reconcile)
+AchievementCheckerInterface  ←  kontrakt pro checkery
+AchievementCheckJob     ←  cron entry (hodinově)
+Checkers/               ←  konkrétní checkery (1 soubor / 1 achievement)
+```
+
+## Interface
+
+```php
+namespace App\Core\Achievements;
+
+interface AchievementCheckerInterface {
+    public function getAchievementId(): string;
+    public function check(string $userId): bool;
+}
+```
+
+`getAchievementId()` vrací UUID achievementu (musí existovat v tabulce `achievements`).
+`check()` vrátí `true`, pokud uživatel splňuje podmínku.
+
+## Granter
+
+```php
+class AchievementGranter {
+    public function grantIfEarned(string $userId, AchievementCheckerInterface $checker): void;
+    public function reconcile(string $userId, array $checkers): void;
+}
+```
+
+- `grantIfEarned` — přidá záznam do `user_achievements`, pokud jí ještě uživatel nemá a `check()` vrátí true.
+- `reconcile` — 2-way sync: může i revokovat (pokud checker přestane být splněný a achievement to umožňuje).
+
+Většina achievementů je „one-way” — jednou získáno, neztratíte. Některé (např. *Steam Linked*) `reconcile` mažou, pokud Steam odpojíte.
+
+## Existující checkery
+
+Soubor → odpovídající achievement:
+
+| Checker | Co kontroluje |
+|---------|---------------|
+| `SteamLinkedChecker` | `users.steamid != NULL` |
+| `AnthemUploadedChecker` | Existuje `user_anthems` |
+| `FactionFoundedChecker` | Uživatel je `created_by` aspoň jedné frakce |
+| `FactionLeftChecker` | Záznam v `user_activities` typu `faction.left` |
+| `FactionInviteAcceptedChecker` | Záznam v `user_activities` typu `faction.invite.accepted` |
+| `FactionLeadershipTransferredChecker` | `user_activities` typu `faction.leadership.transferred` |
+| `NeutralSurvivorChecker` | Uživatel není v žádné frakci > X dní |
+| `CharacterAgeChecker` | Postava má `age >= X` |
+| `EarlyDeathChecker` | Postava `death_at - created_at < 24h` |
+| `PeacefulDeathChecker` | Postava zemřela mimo PvP (death_cause analyse) |
+| `SelfKillChecker` | Death cause obsahuje sebevražedný klíč |
+| `MoralityStreakChecker` | X postav za sebou stejné morálky |
+| `JournalCountChecker` | Počet zápisů `>= N` |
+| `HoursPlayedChecker` | Suma hodin z relay `>= X` |
+| `BeanKingChecker` | Beans balance `>= X` |
+
+## Cron `AchievementCheckJob`
+
+```php
+public function execute(bool $dryRun): void {
+    $users = $this->userFacade->getActiveUsers();
+    $checkers = $this->registry->getAll();
+
+    foreach ($users as $user) {
+        foreach ($checkers as $checker) {
+            $this->granter->grantIfEarned($user->id, $checker);
+        }
+    }
+}
+```
+
+## Přidání nového checkeru
+
+<Steps>
+  <Step title="Definujte achievement">
+    Insert row do `achievements` (přes `POST /api/v1/achievements` nebo SQL).
+  </Step>
+  <Step title="Implementujte checker">
+    Třída v `src/Core/Achievements/Checkers/MyChecker.php`. Implementujte `getAchievementId()` (vraťte UUID) a `check($userId)`.
+  </Step>
+  <Step title="Zaregistrujte checker">
+    V `JobRegistry` / `CheckerRegistry` přidejte instanci.
+  </Step>
+  <Step title="Otestujte v dry-run">
+    `php cron.php?...&job=AchievementCheckJob&dry_run=1` ukáže, kdo by dostal.
+  </Step>
+</Steps>
+
+## Notifikace
+
+Po udělení vznikne notifikace `achievement.granted` s polem `announced: false`. Po prvním view (UI) se nastaví na `true`, aby se neukazovala znovu.

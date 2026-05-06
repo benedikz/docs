@@ -1,0 +1,81 @@
+---
+title: "Datový model — přehled"
+description: "Mapa hlavních entit a vztahů mezi nimi."
+icon: "database"
+---
+
+DAYZERO Portál pracuje s ~28 tabulkami v MySQL databázi. Schéma najdete v `schema.sql` (35 kB) v repozitáři.
+
+## Hlavní oblasti
+
+```
+Users ──┬── Characters ──┬── CharacterJournals
+        │                 └── (statistics from relay)
+        │
+        ├── UserFactions ── Factions ──┬── FactionJournals
+        │                                └── FactionGalleryItems
+        │
+        ├── UserGalleryItems
+        ├── UserAnthems
+        ├── UserAchievements ── Achievements
+        ├── UserGroups ── Groups
+        ├── Beans
+        ├── UserFollows  (self-relation)
+        ├── UserReputations  (self-relation)
+        ├── UserWhitelists
+        ├── UserDevices
+        ├── UserSessions   (z relay logů)
+        ├── UserActivities (audit)
+        └── UserConsents (GDPR)
+
+System ─┬── SysTokens (activation, recovery, 2FA, …)
+        ├── SysRateLimits
+        ├── Notifications
+        ├── ConfigWebhooks
+        ├── CalendarEvents
+        ├── UserUploads (avatar, banner, gallery, anthem, …)
+        ├── Moralities
+        └── Applications (general — whitelist, future types)
+```
+
+## Identifikátory
+
+- **UUID v4** všude tam, kde to dává smysl (users, characters, factions, journal entries, gallery items, …).
+- **AUTO_INCREMENT INT** u některých legacy / číselníkových tabulek (groups, beans).
+- **Steam64** je 17místný řetězec, ne číslo (kvůli velikosti).
+
+## Stálost dat
+
+| Skupina | Politika |
+|---------|----------|
+| Profil, postavy, deníky | Permanentní (do smazání účtu / postavy). |
+| Devices | Smazání po 30 dnech neaktivity. |
+| Rate limits | Cleanup při dalším requestu (lazy). |
+| Notifications | Permanentní (lze označit jako neaktivní). |
+| Audit log | 30 dní (smaže `LogRetentionJob`). |
+| Aplikační logy | 30 dní. |
+
+## Cizí klíče
+
+Schéma většinou používá `ON DELETE CASCADE` pro vázané záznamy (např. mazání postavy → její deníky). Některé výjimky:
+
+- `user_uploads` — zůstávají i po smazání záznamu, aby šly recyklovat.
+- `notifications` — zůstávají, ukazují historii.
+
+## Indexy
+
+- `users.username`, `users.steamid`, `users.dz_be_hash` — unikátní.
+- `characters.owner`, `characters.status` — pro výpisy.
+- `user_activities (user_id, created_at)` — pro audit query.
+- `user_sessions (steamid, timestamp)` — pro relay matching.
+
+## Související
+
+<CardGroup cols={2}>
+  <Card title="Entity" icon="table" href="/vyvojari/data/entity">
+    Detailní popis sloupců hlavních tabulek.
+  </Card>
+  <Card title="Enumy a typy" icon="list" href="/vyvojari/data/enumy">
+    Vyjmenované hodnoty.
+  </Card>
+</CardGroup>

@@ -1,0 +1,118 @@
+---
+title: "Auth"
+description: "Endpointy pro registraci, přihlášení, 2FA, recovery a OAuth."
+icon: "key"
+---
+
+## `POST /api/v1/auth/register`
+
+Registrace nového účtu.
+
+**Body:**
+
+| Pole | Typ | Povinné | Limit |
+|------|-----|---------|-------|
+| `username` | string | ano | 3–32, lowercase, `[a-z0-9._-]` |
+| `email` | string | ano | RFC 5322 |
+| `password` | string | ano | min 8 |
+| `tos_consent` | boolean | ano | `true` |
+
+**Odpověď:** 201 + envelope, `data.user_id`. Aktivační e-mail dorazí na adresu.
+
+## `POST /api/v1/auth/activate`
+
+Aktivace účtu pomocí tokenu z e-mailu.
+
+**Body:** `{ "token": "..." }`
+
+**Odpověď:** 200 / `data.activated: true`. Account `verified = 1`, `active = 1`.
+
+## `POST /api/v1/auth/login`
+
+Přihlášení uživatelským jménem a heslem.
+
+**Body:** `{ "username": "...", "password": "..." }`
+
+**Odpověď bez 2FA:** session vytvořena, `data.logged_in: true`.
+
+**Odpověď s 2FA:** `data.challenge: true`, `data.challenge_token: "..."`. OTP kód jde na e-mail.
+
+**Rate limit:** 30/60 (default).
+
+## `POST /api/v1/auth/challenge`
+
+Druhý krok 2FA — ověření OTP kódem.
+
+**Body:**
+
+```json
+{ "challenge_token": "...", "code": "482910" }
+```
+
+**Odpověď:** session vytvořena nebo 401 při špatném kódu.
+
+## `GET /api/v1/auth/status`
+
+Vrátí stav session (i pro nepřihlášené).
+
+**Odpověď:**
+
+```json
+{
+  "status": "ok",
+  "data": {
+    "logged_in": true,
+    "user_id": "8b...",
+    "username": "pepa",
+    "role": ["USER"]
+  }
+}
+```
+
+## `POST /api/v1/auth/logout`
+
+Smaže session.
+
+**Odpověď:** 204.
+
+## `POST /api/v1/recovery`
+
+Vyžádá reset hesla.
+
+**Body:** `{ "email": "..." }`
+
+**Odpověď:** vždy 200 (proti enumeration). Pokud e-mail existuje, dorazí token.
+
+## `POST /api/v1/recovery/reset/{token}`
+
+Nastaví nové heslo.
+
+**Body:** `{ "password": "novehe5lo" }`
+
+**Odpověď:** 200 nebo 410, pokud token vypršel.
+
+## `GET /api/v1/auth/providers/discord?action={action}`
+
+OAuth flow pro Discord.
+
+| `action` | Co dělá |
+|----------|---------|
+| `login` | Spustí přihlašovací redirect. |
+| `link` | Spustí link existujícího účtu (vyžaduje session). |
+| `callback` | Discord redirect zpět; server vymění `code` za token. |
+
+## `GET /api/v1/auth/providers/steam?action={action}`
+
+OAuth (OpenID 2.0) flow pro Steam — stejné akce jako Discord.
+
+## `GET /api/v1/integrations/link/{token}`
+
+Potvrzovací URL pro propojení (z e-mailu). Token typu `TYPE_INTEGRATION_DISCORD` nebo `TYPE_INTEGRATION_STEAM`.
+
+## `POST /api/v1/user/me/email`
+
+Inicializuje změnu e-mailu (potvrzení jde na **starou** adresu).
+
+**Body:** `{ "email": "novy@example.com" }`
+
+**Odpověď:** 200 / `data.pending: true`.

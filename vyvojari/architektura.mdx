@@ -1,0 +1,117 @@
+---
+title: "Architektura"
+description: "Vysokoúrovňový pohled na technologie, vrstvy a tok dat v DAYZERO Portálu."
+icon: "layers"
+---
+
+DAYZERO Portál je klasická serverová PHP aplikace s vlastním lehkým frameworkem (žádný Symfony, Laravel ani Slim). Ohlíží se na **REST API**, které využívá jak frontend portálu, tak externí integrace.
+
+## Stack
+
+| Vrstva | Technologie |
+|--------|-------------|
+| Jazyk | **PHP 8+** |
+| Databáze | **MySQL 8+** (přes PDO) |
+| Cache / lock | filesystem (`.cron.lock`, sessions) |
+| Šablony | čisté PHP `*.php` views |
+| HTTP | Apache (s `.htaccess` rewrite na entrypoint) |
+| Mail | SMTP (Hostinger) |
+| Cron | systémový cron volá `cron.php?key=…` |
+| OAuth | Discord (OAuth2), Steam (OpenID 2.0) |
+| Platby | FIO Bank API, SPAYD, Pay By Square |
+
+## Vrstvy aplikace
+
+```
+┌─────────────────────────────────────────────────────┐
+│                  default.php (entry)                │
+│              ↓                                      │
+│        Router (config/routes.json)                  │
+│              ↓                                      │
+│   Middleware: auth, admin, rate_limit               │
+│              ↓                                      │
+│   Controller   (user/admin/auth/public/api)         │
+│              ↓                                      │
+│   Service / Facade  (Core/Services, Core/Model)     │
+│              ↓                                      │
+│   Repository / Database (Core/Database, PDO)        │
+└─────────────────────────────────────────────────────┘
+```
+
+## Adresářový pohled
+
+```
+/  (root)
+├── default.php          # Hlavní entry point pro web
+├── cron.php             # Cron entry point (chráněný klíčem)
+├── anthem_gate.php      # Speciální endpoint pro audio streaming
+├── .htaccess            # Apache rewrites
+├── config/              # JSON konfigurace
+│   ├── app.json
+│   ├── routes.json
+│   └── api.json
+├── lang/                # Lokalizace
+│   ├── cs_CZ.json
+│   ├── en_US.json
+│   └── custom/          # Admin overrides
+├── src/
+│   ├── autoload.php
+│   ├── Core/            # Framework, services, infra
+│   ├── Api/V1/          # REST API třídy
+│   ├── auth/            # Login, registrace, 2FA
+│   ├── user/            # Uživatelské controllery a views
+│   ├── admin/           # Admin panel
+│   ├── public/          # Veřejné stránky (profily, frakce)
+│   └── layouts/         # Sdílené layouty
+├── uploads/             # Nahrané soubory
+├── logs/                # Aplikační logy
+├── database_migrations/ # SQL migrace
+├── schema.sql           # Kompletní schéma DB
+├── API.md               # Plný popis REST API
+└── RELAY_FORMAT_SPEC.md # NDJSON formát logů z DayZ serveru
+```
+
+## Tok požadavku
+
+<Steps>
+  <Step title="Apache převzít požadavek">
+    `.htaccess` přesměruje vše na `default.php`.
+  </Step>
+  <Step title="Router rozhodne">
+    Vyhledá v `routes.json` cestu, určí controller, akci a roli.
+  </Step>
+  <Step title="Middleware">
+    Ověří autentizaci, role a rate limit.
+  </Step>
+  <Step title="Controller">
+    Vykoná akci, dotáže se služeb a fasád.
+  </Step>
+  <Step title="View / JSON">
+    Buď render PHP šablony (web) nebo JSON odpověď (API).
+  </Step>
+</Steps>
+
+## Klíčové principy
+
+- **Žádný framework navíc** — vlastní řešení udržuje stack lehký a předvídatelný.
+- **JSON konfigurace** — `app.json`, `routes.json` jsou jediný zdroj pravdy.
+- **Session-based auth** — žádný token v hlavičkách, vše přes cookies.
+- **Cron-driven přepočítávání** — achievementy, ingest a synchronizace běží mimo požadavek.
+- **Lokalizace všude** — všechny stringy mají `_key` a překlady v `lang/`.
+
+## Související
+
+<CardGroup cols={2}>
+  <Card title="Adresářová struktura" icon="folder-tree" href="/vyvojari/struktura-projektu">
+    Detailní mapa souborů.
+  </Card>
+  <Card title="Konfigurace" icon="settings" href="/vyvojari/konfigurace">
+    `app.json`, env proměnné, secrets.
+  </Card>
+  <Card title="Routing" icon="route" href="/vyvojari/routing">
+    Jak fungují cesty a middleware.
+  </Card>
+  <Card title="Datový model" icon="database" href="/vyvojari/data/prehled">
+    Přehled databázového schématu.
+  </Card>
+</CardGroup>

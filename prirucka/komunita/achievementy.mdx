@@ -1,0 +1,69 @@
+---
+title: "Achievementy (odznaky)"
+description: "Automaticky udělované ocenění za splnění podmínek."
+icon: "trophy"
+---
+
+Achievement (česky odznak) je virtuální ocenění za splnění určité podmínky. Většina se uděluje **automaticky** — cron job pravidelně kontroluje stav účtu a uděluje, na co máte nárok.
+
+## Vzácnost
+
+Každý achievement má jednu z pěti rarit:
+
+| Rarita | Popis |
+|--------|-------|
+| **COMMON** | Snadno dosažitelné (např. propojený Steam). |
+| **UNCOMMON** | Vyžaduje aktivitu, ale nic těžkého. |
+| **RARE** | Splní zlomek hráčů. |
+| **EPIC** | Vyžaduje dlouhodobou hru / RP. |
+| **LEGENDARY** | Skutečně mimořádné výkony. |
+
+## Příklady checkerů
+
+Portál interně eviduje několik *checkerů* — každý kontroluje jeden achievement:
+
+- **Steam Linked** — Steam propojený
+- **Anthem Uploaded** — máte hymnu
+- **Faction Founded** — založili jste frakci
+- **Faction Invite Accepted** — přijali jste pozvánku
+- **Faction Left** — opustili jste frakci
+- **Character Age** — postava dosáhla věku X
+- **Early Death** — postava zemřela do 24 hodin
+- **Peaceful Death** — smrt mimo PvP
+- **Self Kill** — sebevražda postavy
+- **Morality Streak** — konzistentní morálka
+- **Hours Played** — odehráno X hodin (z relay)
+- **Bean King** — překročili jste hranici beans
+- **Faction Leadership Transferred** — předali jste vedení
+- **Neutral Survivor** — žijete bez frakce
+- **Journal Count** — počet zápisů v deníku
+
+Konkrétní podmínky a názvy se v UI zobrazují vždy aktuálně.
+
+## Jak je zobrazit
+
+V profilu najdete sekci **Odznaky**. Pokud nechcete, aby je viděli ostatní, [skryjte sekci](/prirucka/ucet/layout-profilu) v layoutu profilu.
+
+## Notifikace
+
+Po udělení dostanete notifikaci. Achievement v notifikacích má pole `announced` — když ho přečtete, nastaví se na true.
+
+## Udělení adminem
+
+Admini mohou v některých případech udělit achievement ručně (např. za výjimečnou událost). Endpoint `POST /api/v1/user/achievements`.
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Jak často se kontroluje?">
+    Cron job `AchievementCheckJob` běží přibližně každou hodinu. Pokud jste si zaslouženého odznaku nevšimli okamžitě, počkejte — neutíká vám.
+  </Accordion>
+  <Accordion title="Můžu o achievement přijít?">
+    Některé ano (např. *Steam Linked* po odpojení Steamu). Většina ale jde jednou cestou — nahoru.
+  </Accordion>
+  <Accordion title="Lze achievementy obchodovat?">
+    Ne, jsou pevně vázané na účet.
+  </Accordion>
+</AccordionGroup>
+
+Vývojářský pohled na engine: [Achievementy v subsystémech](/vyvojari/subsystemy/achievementy).

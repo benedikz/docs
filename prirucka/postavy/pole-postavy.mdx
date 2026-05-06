@@ -1,0 +1,70 @@
+---
+title: "Pole postavy"
+description: "Kompletní reference všech polí, jejich limity a vztah k mechanikám."
+icon: "list"
+---
+
+Postava se skládá z přibližně 25 polí. Část je povinná, část volitelná. Většina volitelných ovlivňuje kvalitu schvalovacího procesu (čím detailnější, tím lépe).
+
+## Povinná pole
+
+| Pole | Typ | Limit | Poznámka |
+|------|-----|-------|----------|
+| `face` | string (preset) | — | Vybráno ze seznamu modelu DayZ |
+| `first_name` | string | 56 znaků | Křestní jméno |
+| `last_name` | string | 56 znaků | Příjmení |
+| `gender` | enum | 0 = muž, 1 = žena | |
+| `age` | int | 18 – 80 | |
+| `birth_at` | date | YYYY-MM-DD | Konzistence s `age` |
+| `nationality` | string | ISO kód | CZ, SK, PL, ... |
+| `morality` | UUID | FK na *moralities* | Lawful good ... chaotic evil |
+| `class` | enum | CIVILIAN / SOLDIER / MILITIA | |
+
+## Volitelná pole
+
+| Pole | Limit / typ | Význam |
+|------|-------------|--------|
+| `alias` | 32 znaků | Přezdívka |
+| `middle_name` | 32 znaků | Druhé jméno |
+| `description` | text | Příběh postavy (doporučeno) |
+| `place_of_birth` | text | Město / vesnice |
+| `education` | text | Dokončené vzdělání |
+| `marital_status` | text | Svobodný/vdaná… |
+| `openness` | text | Otevřenost vůči ostatním (RP) |
+| `positive_traits` | JSON array | Seznam pozitivních vlastností |
+| `negative_traits` | JSON array | Seznam negativních vlastností |
+| `skills` | JSON array | Schopnosti (řízení, střelba, lékařství…) |
+
+## Vojenský background
+
+Pouze pro třídu **SOLDIER** (volitelné pro ostatní):
+
+| Pole | Limit | Význam |
+|------|-------|--------|
+| `military_rank` | text | Hodnost |
+| `military_unit` | text | Jednotka |
+| `military_position` | text | Funkce |
+| `military_missions` | text | Mise / nasazení |
+| `military_experience` | text | Roky služby, specifika |
+
+## Avatar a banner postavy
+
+Stejné limity jako u profilu — JPG/PNG/GIF do 5 MB. Avatar bývá portrét, banner širokoúhlý obrázek (např. screenshot ze hry).
+
+## Status
+
+Pole `status` je řízené adminem, vy ho neměníte:
+
+| Hodnota | Význam |
+|---------|--------|
+| **PENDING** | Čeká na schválení |
+| **APPROVED** | Schváleno, lze hrát |
+| **DENIED** | Zamítnuto, v `denial_reason` je důvod |
+
+## Další systémová pole (jen pro přehled)
+
+- `is_alive`, `death_at`, `death_cause` — viz [Smrt postavy](/prirucka/postavy/smrt).
+- `published_at` — kdy se postava zveřejnila jako memoriál.
+- `approved_by`, `approved_at` — jaký admin a kdy schválil.
+
+Vývojářský pohled (entita, sloupce, indexy) najdete v [Datovém modelu → Entity](/vyvojari/data/entity).

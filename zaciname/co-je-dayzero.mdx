@@ -1,0 +1,63 @@
+---
+title: "Co je DAYZERO Portál"
+description: "Kompletní komunitní platforma kolem RP serveru DAYZERO.CZ na hře DayZ."
+icon: "info"
+---
+
+DAYZERO Portál je webová aplikace, kterou provozuje komunita serveru **DAYZERO.CZ**. Slouží jako rozcestník mezi hráčem, RP postavami a samotným herním serverem.
+
+## Co portál umí
+
+<CardGroup cols={2}>
+  <Card title="Správa identity" icon="id-card">
+    Účet propojený se Steamem, Discordem a 2FA. Profil s avatarem, bannerem a hymnou.
+  </Card>
+  <Card title="Postavy a deníky" icon="book-open">
+    Až **3 živé RP postavy** s kompletním backgroundem, schvalovacím procesem a vlastním deníkem.
+  </Card>
+  <Card title="Frakce" icon="flag">
+    Otevřené i uzavřené frakce, role *vůdce*/*člen*, pozvánky, frakční galerie a deník.
+  </Card>
+  <Card title="Herní statistiky" icon="chart-line">
+    Server posílá takzvaný *relay* — log zápasů, smrtí, výstřelů. Portál z něj počítá vaše statistiky.
+  </Card>
+  <Card title="Whitelist proces" icon="clipboard-list">
+    Před vstupem na server vyplníte krátký dotazník. Admin ho posoudí a schválí.
+  </Card>
+  <Card title="Sociální vrstva" icon="users-round">
+    Sledování ostatních hráčů, reputace, achievementy a kalendář akcí.
+  </Card>
+</CardGroup>
+
+## Jak portál souvisí s herním serverem
+
+<Frame>
+```
+DayZ klient ──► herní server DAYZERO ──► relay logy ──► Portál
+                                              │
+Hráč ──► webový prohlížeč ──► Portál ◄────────┘
+```
+</Frame>
+
+- **Herní server** běží zvlášť. Portál ho neřídí, jen o něm sbírá data.
+- **Whitelist** je most: na server pustí jen hráče se schválenou žádostí.
+- **Relay** je formát logů, který server posílá portálu po SFTP. Z něj se počítá vše od „kolik hodin jsi hrál” po jednotlivé zabíjení zombíků.
+
+## Komu portál slouží
+
+| Role        | Co tu dělá                                                         |
+|-------------|--------------------------------------------------------------------|
+| **Návštěvník** | Prohlíží veřejné profily, frakce a deníky.                       |
+| **Hráč**       | Spravuje účet, postavy, frakci, žádá o whitelist.                |
+| **Vůdce frakce** | Spravuje frakční gallery, deník, členy a pozvánky.             |
+| **Admin**      | Schvaluje postavy, posuzuje whitelist, spravuje webhooks a uživatele. |
+
+## Technologie pod kapotou
+
+- **PHP** + **MySQL 8** (vlastní lehký framework, žádný Symfony/Laravel)
+- **REST API v1** pro frontend i externí integrace
+- **OAuth2**: Discord, Steam (OpenID 2.0)
+- **Cron** pro relay ingest, achievement check a další úlohy
+- **Hostinger SMTP** pro transakční e-maily
+
+Detaily najdete v sekci [Pro vývojáře](/vyvojari/architektura).

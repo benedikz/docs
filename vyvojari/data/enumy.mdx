@@ -1,0 +1,114 @@
+---
+title: "Enumy a typy"
+description: "Vyjmenované hodnoty, které najdete v API a v databázi."
+icon: "list"
+---
+
+Enumy jsou definovány v `src/Core/Model/Enums/`. Custom typy v `src/Core/Model/Types/`.
+
+## `AchievementRarity`
+
+| Hodnota | Význam |
+|---------|--------|
+| `COMMON` | Běžné |
+| `UNCOMMON` | Méně běžné |
+| `RARE` | Vzácné |
+| `EPIC` | Epické |
+| `LEGENDARY` | Legendární |
+
+## `CharacterJournalVisibility` / `FactionJournalVisibility`
+
+| Hodnota | Význam |
+|---------|--------|
+| `VISIBILITY_PUBLIC` | Vidí všichni |
+| `VISIBILITY_PROTECTED` | Vidí přihlášení (default) |
+| `VISIBILITY_PRIVATE` | Pouze vlastník + admin |
+
+## `FactionRole`
+
+| Hodnota | Význam |
+|---------|--------|
+| `LEADER` | Vůdce |
+| `MEMBER` | Člen |
+
+## `FactionType`
+
+| Hodnota | Význam |
+|---------|--------|
+| `OPEN` | Veřejná, vidí v seznamu |
+| `CLOSED` | Skrytá, jen na pozvánku (default) |
+
+## `WhitelistStatus`
+
+| Hodnota | Význam |
+|---------|--------|
+| `PENDING` | Čeká na posouzení |
+| `APPROVED` | Schváleno |
+| `DENIED` | Zamítnuto |
+
+## `CharacterStatus`
+
+| Hodnota | Význam |
+|---------|--------|
+| `PENDING` | Čeká na schválení |
+| `APPROVED` | Schváleno |
+| `DENIED` | Zamítnuto |
+
+## `CharacterClass`
+
+| Hodnota | Význam |
+|---------|--------|
+| `CLASS_CIVILIAN` | Civilista |
+| `CLASS_SOLDIER` | Voják |
+| `CLASS_MILITIA` | Domobranec |
+
+## `TokenType` (pro `sys_tokens`)
+
+| Hodnota | Účel |
+|---------|------|
+| `TYPE_ACTIVATION` | Aktivace účtu |
+| `TYPE_RECOVERY` | Reset hesla |
+| `TYPE_CHALLENGE` | 2FA OTP challenge |
+| `TYPE_INTEGRATION_DISCORD` | Propojení Discordu |
+| `TYPE_INTEGRATION_STEAM` | Propojení Steamu |
+| `TYPE_EMAIL_CHANGE` | Změna e-mailu |
+
+## `UploadPurpose`
+
+| Hodnota | Použití |
+|---------|---------|
+| `avatar` | Avatar uživatele |
+| `banner` | Banner profilu |
+| `anthem` | Audio hymna |
+| `anthem_cover` | Cover obrázek hymny |
+| `gallery` | Fotka v galerii |
+| `faction_avatar` | Avatar frakce |
+| `faction_cover` | Banner frakce |
+| `journal_thumbnail` | Náhled zápisu |
+| `calendar_event` | Náhled akce |
+
+## `UploadType`
+
+| Hodnota | Význam |
+|---------|--------|
+| `images` | Obrázek |
+| `anthems` | Audio |
+
+## `Roles` (skupiny / oprávnění)
+
+| Konstanta | ID | Použití |
+|-----------|-----|---------|
+| `USER` | 1 | Standardní uživatel |
+| `MODERATOR` | 2–4 | Moderátor (víceúrovňový) |
+| `ADMIN` | 5 | Plný přístup (protected) |
+| `BOT` | — | Bot účet (protected) |
+
+## Custom types
+
+### `SteamID`
+
+Wrapper kolem 17místného řetězce. Validuje formát `^7656119[89]\d{10}$`.
+
+### `DbNull`
+
+Marker, že se má do MySQL zapsat `NULL` (rozlišuje se od PHP `null` pro některé sloupce).

@@ -1,0 +1,147 @@
+---
+title: "Admin endpointy"
+description: "Souhrn admin-only endpointů (uživatelé, postavy, whitelist, webhooky, audit)."
+icon: "cog"
+---
+
+Všechny endpointy v této kapitole vyžadují roli **ADMIN** (případně MODERATOR pro některé čtecí akce). Nepřihlášený nebo neoprávněný = 401/403.
+
+## Uživatelé
+
+### `GET /api/v1/admin/users`
+
+Seznam s filtrem.
+
+**Query:** `q`, `page`, `order` (`newest`/`last_seen`/`sessions`/`role`).
+
+**Odpověď:** username, e-mail (redacted pro lower-tier moderátory), last_seen, role, session_count.
+
+### `DELETE /api/v1/admin/users?id=:uuid`
+
+Smaže/anonymizuje účet. Pouze pro management role. Nelze smazat vyšší role.
+
+## Postavy
+
+### `GET /api/v1/admin/characters`
+
+**Query:** `page`, `limit` (default 20), `status` (PENDING/APPROVED/DENIED).
+
+**Odpověď:** kombinace polí postavy + údaje o vlastníkovi.
+
+Schvalování / zamítnutí: `PUT /api/v1/character/:id` (běžný endpoint, ale s admin middleware).
+
+## Whitelist
+
+### `GET /api/v1/admin/whitelists`
+
+**Query:** `page`, `limit`, `status`.
+
+**Odpověď:** seznam s rozšířenými poli (label otázek z lokalizace, steamid, discord_id).
+
+### `GET /api/v1/admin/whitelist-export`
+
+Export schválených Steam64 IDs pro herní server.
+
+## Bany
+
+### `GET /api/v1/admin/bans`
+
+Seznam aktivních banů.
+
+### `POST /api/v1/admin/bans`
+
+Vytvoří ban.
+
+**Body:** `user_id`, `reason`, `banned_until`.
+
+### `DELETE /api/v1/admin/bans/:id`
+
+Zruší ban.
+
+## Webhooky
+
+### `GET /api/v1/admin/config/webhooks`
+
+Seznam nakonfigurovaných webhooků.
+
+### `POST /api/v1/admin/config/webhooks`
+
+Vytvoří webhook.
+
+**Body:**
+
+```json
+{
+  "event": "character.death",
+  "url": "https://discord.com/api/webhooks/...",
+  "name": "Death feed",
+  "template": "{character.name} zemřel: {death_cause}",
+  "enabled": true
+}
+```
+
+### `PUT /api/v1/admin/config/webhook/:id`
+
+Update.
+
+### `DELETE /api/v1/admin/config/webhook/:id`
+
+Smaže webhook.
+
+Detail eventů a šablon: [Subsystémy → Webhooky](/vyvojari/subsystemy/webhooks).
+
+## Skupiny / Role
+
+### `GET /api/v1/admin/config/groups`
+
+Seznam rolí.
+
+### `PUT /api/v1/admin/config/group/:id`
+
+Update role (`name` max 16, `primary_color`, `secondary_color`).
+
+**Pravidla:** Skupiny `ADMIN` a `BOT` jsou `protected` a nelze upravit.
+
+## Lokalizace
+
+### `GET /api/v1/admin/config/localization`
+
+Vrátí všechny custom překlady (overrides) per locale.
+
+### `POST /api/v1/admin/config/localization`
+
+Přidá / přepíše překlad.
+
+**Body:** `{ "locale": "cs_CZ", "key": "_custom.something", "value": "Něco" }`.
+
+**Pravidlo:** klíč musí začínat `_`.
+
+### `DELETE /api/v1/admin/config/localization`
+
+Smaže překlad.
+
+**Body:** `{ "locale": "...", "key": "..." }`.
+
+## Mailing
+
+### `POST /api/v1/admin/mailing`
+
+Hromadný e-mail. Filtruje uživatele (role, faction, verified) a zařadí do fronty SMTP.
+
+## Audit log
+
+### `GET /api/v1/admin/audit-log`
+
+Záznamy o klíčových akcích (login, character kill, faction creation, whitelist decision, …).
+
+**Query:** `user_id`, `type`, `from`, `to`.
+
+## Relay ingest
+
+### `POST /api/v1/admin/relay-ingest`
+
+Manuální upload NDJSON souboru (alternativa k automatickému SFTP polling).
+
+### `POST /api/v1/admin/adm-ingest`
+
+Manuální upload `.ADM` souboru.

@@ -1,0 +1,96 @@
+---
+title: "Routing"
+description: "Jak se URL mapují na controllery a middleware."
+icon: "route"
+---
+
+Router je jednoduchá třída v `src/Core/Router.php`, která nahlíží do `config/routes.json` a vybírá první matching záznam. Žádné regex grouping triky — match je sekvenční a deterministický.
+
+## Formát route
+
+```json
+{
+  "path": "u/character/:id",
+  "role": "user",
+  "controller": "user/CharacterController:show",
+  "middleware": ["auth"],
+  "rate_limit": "30/60"
+}
+```
+
+| Pole | Význam |
+|------|--------|
+| `path` | URL bez root URL (např. `u/home`, `api/v1/character`). |
+| `role` | `guest`, `user`, `admin` — kdo má přístup. |
+| `controller` | `<dir>/<ClassName>:<methodName>`. |
+| `middleware` | Pole názvů middlewarů (`auth`, `admin`, `rate_limit`). |
+| `rate_limit` | `<requestů>/<sekund>`. |
+
+## Path placeholdery
+
+- `:id`, `:slug`, `:user_id` — placeholder, předaný jako `$_GET[...]`.
+- `:slug*` — wildcard pro vícesegmentové cesty (např. `u/{username}/journal/{id}`).
+
+## Role
+
+| Role | Co povoluje |
+|------|-------------|
+| `guest` | Veřejné — nepřihlášený má přístup. |
+| `user` | Přihlášený s rolí USER nebo vyšší. |
+| `admin` | Přihlášený s rolí ADMIN (případně MODERATOR podle endpointu). |
+
+## Middleware
+
+Spouští se před akcí controlleru.
+
+| Middleware | Co dělá |
+|------------|---------|
+| `auth` | Vrátí 401, pokud není přihlášený. |
+| `admin` | Vrátí 403, pokud není ADMIN/MODERATOR. |
+| `rate_limit` | Throttling per IP+endpoint. |
+
+## Příklady route
+
+```json
+[
+  { "path": "auth/login", "role": "guest", "controller": "auth/AuthController:login" },
+  { "path": "auth/register", "role": "guest", "controller": "auth/AuthController:register" },
+
+  { "path": "u/home", "role": "user", "controller": "user/UserController:default" },
+  { "path": "u/character/create", "role": "user", "controller": "user/CharacterController:create" },
+  { "path": "u/character/:id", "role": "user", "controller": "user/CharacterController:show" },
+
+  { "path": "u/:username", "role": "guest", "controller": "public/UserProfileController:show" },
+  { "path": "f/:slug", "role": "guest", "controller": "public/FactionProfileController:show" },
+
+  { "path": "api/v1/auth/login", "role": "guest", "controller": "api/AuthLoginApi:post" },
+  { "path": "api/v1/character/:id", "role": "user", "controller": "api/CharacterApi:get" },
+  { "path": "api/v1/admin/users", "role": "admin", "controller": "api/AdminUserApi:get" }
+]
+```
+
+## Resolver
+
+`Router::resolve()` udělá:
+
+1. Normalizuje path (strip query string, leading slash).
+2. Iteruje routes — porovná se zástupnými znaky.
+3. Když najde match, ověří role.
+4. Spustí middleware.
+5. Instancuje controller, zavolá metodu.
+
+## API dispatcher
+
+API třídy v `src/Api/V1/` mají speciální mapping: jméno metody odpovídá HTTP verb. Třída `ApiBase` automaticky volá `get()`, `post()`, `put()`, `delete()` podle requestu.
+
+```php
+class CharacterApi extends ApiBase {
+    public function get() { /* GET /character/:id */ }
+    public function post() { /* POST /character */ }
+    public function put() { /* PUT /character/:id */ }
+}
+```
+
+## Nepřítomnost route
+
+Pokud žádná route neodpovídá, Router vrátí 404 a vyrenderuje `src/public/Views/errors/404.php`.

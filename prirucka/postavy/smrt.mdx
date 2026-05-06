@@ -1,0 +1,53 @@
+---
+title: "Smrt postavy"
+description: "Jak postavu označit jako mrtvou a co tato akce znamená."
+icon: "skull"
+---
+
+Smrt postavy je **nezvratná**. Po označení už ji nelze oživit. Postava ale nezmizí — zůstane v profilu a můžete ji volitelně publikovat jako vzpomínkový (memoriál) profil.
+
+## Kdy postavu „zabít”
+
+- Když ji někdo zastřelí ve hře (KILL event v relay logu).
+- Když chcete RP postavu přirozeně ukončit (vystoupit z příběhu).
+- Když máte 3 živé postavy a chcete místo pro novou (žijící postava se ovšem typicky neuměle „nezabíjí”).
+
+<Warning>
+Na DAYZERO platí pravidlo, že **smrt postavy ve hře se musí promítnout na portál**. Ignorování tohoto pravidla mívá důsledky.
+</Warning>
+
+## Postup
+
+<Steps>
+  <Step title="Otevřete detail postavy">
+    `/u/character/{id}`
+  </Step>
+  <Step title="Klikněte na „Označit jako mrtvou”">
+    Tlačítko je viditelné jen pro vás a admina.
+  </Step>
+  <Step title="Vyplňte příčinu smrti">
+    Pole `death_cause` (max 128 znaků). Příklady:
+    - „Zastřelen banditou u Cherna”
+    - „Infikován, sebevražda”
+    - „Pád z hradu”
+  </Step>
+  <Step title="Potvrďte">
+    Status `is_alive` se nastaví na 0, čas smrti `death_at` na aktuální okamžik.
+  </Step>
+</Steps>
+
+## Co se děje na pozadí
+
+- Postava přestane být „živá”, ve výpisu pro tvorbu nových postav se uvolní místo.
+- Achievementy závislé na smrti (např. *Klidná smrt*, *Předčasná smrt*) se mohou udělit.
+- Statistiky postavy se zafrejzují k datu smrti.
+- Webhook `character.death` se spustí (pokud je nakonfigurován admin).
+
+## Po smrti
+
+Volitelně můžete:
+
+- Postavu **zveřejnit** jako memoriál — zobrazí se na veřejném profilu jako vzpomínka. [Návod](/prirucka/postavy/publikace-mrtve).
+- Nechat ji v privátním seznamu vašich postav (default).
+
+Editovat lze už jen velmi omezeně — především zveřejnění a pár vzpomínkových polí.

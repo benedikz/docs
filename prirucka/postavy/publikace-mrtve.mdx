@@ -1,0 +1,49 @@
+---
+title: "Publikace mrtvé postavy"
+description: "Zveřejnění postavy jako memoriálu po její smrti."
+icon: "scroll"
+---
+
+Mrtvou postavu můžete „pověsit na zeď slávy” — zveřejnit ji jako memoriál. Slouží jako vzpomínka pro komunitu i pro vás samotné.
+
+## Co se publikací změní
+
+- Postava se objeví na **veřejném profilu** majitele jako mrtvá (s rámečkem památníku).
+- Bude dostupná na URL profilu (např. `/u/{username}`) v sekci *In Memoriam*.
+- Deníky postavy s viditelností PUBLIC zůstanou čitelné komukoli.
+- V interním poli `published_at` se uloží čas zveřejnění.
+
+## Podmínky
+
+<Check>Postava musí být mrtvá (`is_alive = 0`).</Check>
+<Check>Vyplněná příčina smrti.</Check>
+<Check>Vy jste vlastník postavy (admin může výjimečně publikovat za vás).</Check>
+
+## Postup
+
+<Steps>
+  <Step title="Otevřete detail postavy">
+    Mrtvou postavu najdete v seznamu postav vašeho profilu (sekce *Mrtvé*).
+  </Step>
+  <Step title="Klikněte na „Zveřejnit jako memoriál”">
+    Tlačítko je dostupné jen pokud `is_alive = 0`.
+  </Step>
+  <Step title="Volitelně doplňte vzpomínku">
+    Krátký text, citát postavy nebo její motto.
+  </Step>
+  <Step title="Potvrďte">
+    Postava se přesune na veřejný profil.
+  </Step>
+</Steps>
+
+## Skrytí publikace
+
+Publikaci lze stáhnout zpět — postava zmizí z veřejného profilu, ale zůstane v interním seznamu mrtvých postav. Akce není ničivá, můžete ji opakovat.
+
+<Tip>
+Pokud byla smrt postavy součástí významného příběhu, doporučujeme otevřít její deník na PUBLIC viditelnost. Návštěvníci si tak můžou přečíst její cestu od začátku do konce.
+</Tip>
+
+## Endpointy
+
+Publikace volá `POST /api/v1/character/:id?action=publish`. Pro vývojářský pohled viz [API reference / Postavy](/vyvojari/api/reference/characters).

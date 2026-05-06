@@ -1,0 +1,80 @@
+---
+title: "Whitelist"
+description: "Whitelist žádosti uživatele a jejich review."
+icon: "clipboard-check"
+---
+
+## `GET /api/v1/whitelist`
+
+Vrátí vlastní žádost (nebo `null`).
+
+**Odpověď:**
+
+```json
+{
+  "data": {
+    "id": "uuid",
+    "status": "PENDING",
+    "content": { "experience": "advanced", "rp_experience": "...", ... },
+    "denial_reason": null,
+    "attempt": 1,
+    "created_at": "..."
+  }
+}
+```
+
+## `POST /api/v1/whitelist`
+
+Podání nové žádosti.
+
+**Body:**
+
+```json
+{
+  "content": {
+    "experience": "advanced",
+    "rp_experience": "...",
+    "character_idea": "...",
+    "why_join": "...",
+    "age": "27",
+    "rules_agreement": "yes"
+  }
+}
+```
+
+Otázky a jejich klíče se generují z `config/app.json` → `whitelist.questions`.
+
+**Pravidla:**
+
+- Je vyžadovaný propojený Steam ID.
+- Nesmí existovat jiná `PENDING` nebo `APPROVED` žádost (jinak 409).
+
+## `PUT /api/v1/whitelist/:id`
+
+(Admin) Posouzení.
+
+**Body:** `{ "status": "APPROVED" }` nebo `{ "status": "DENIED", "denial_reason": "..." }`.
+
+**Pravidla:**
+
+- `denial_reason` max 512 znaků.
+- Zápis vytvoří notifikaci uživateli.
+- Při APPROVED se Steam64 přidá do exportu.
+
+## `DELETE /api/v1/whitelist/:id`
+
+(Admin) Smaže žádost.
+
+## `GET /api/v1/admin/whitelists`
+
+(Admin) Seznam žádostí.
+
+**Query:** `page`, `limit`, `status`.
+
+**Odpověď:** s rozšířenými poli — username, steamid, discord_id, label otázek.
+
+## `GET /api/v1/admin/whitelist-export`
+
+(Admin) Export Steam64 IDs schválených hráčů.
+
+**Odpověď:** seznam pro server whitelist (typicky JSON / TXT). Cron `WhitelistSyncJob` ho denně přenáší na herní server přes SFTP.

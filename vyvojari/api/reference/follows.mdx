@@ -1,0 +1,59 @@
+---
+title: "Follows"
+description: "Sledování ostatních uživatelů."
+icon: "user-round-plus"
+---
+
+## `GET /api/v1/follows`
+
+Vrátí sledující/sledované.
+
+**Query (alespoň jeden):**
+
+| Parametr | Význam |
+|----------|--------|
+| `user_id` | Koho sleduje daný uživatel. |
+| `recipient_id` | Kdo sleduje daného uživatele. |
+
+**Odpověď:**
+
+```json
+{
+  "data": {
+    "items": [
+      { "user_id": "...", "username": "pepa", "avatar_url": "...", "created_at": "..." }
+    ]
+  }
+}
+```
+
+Pokud zadáte oba parametry, server vyhodnotí přesný vztah (kdo sleduje koho) — užitečné pro UI tlačítka.
+
+## `POST /api/v1/follows`
+
+Sledovat uživatele.
+
+**Body:** `{ "user_id": "..." }` (cíl sledování).
+
+**Pravidla:**
+
+- Sledovat sám sebe nelze (400).
+- Duplicitní follow je idempotentní (vrátí `already_following: true`).
+
+## `DELETE /api/v1/follows`
+
+Přestat sledovat.
+
+**Body:** `{ "user_id": "..." }`.
+
+## Datový model
+
+Tabulka `user_follows`:
+
+| Sloupec | Význam |
+|---------|--------|
+| `user_id` | Kdo sleduje |
+| `recipient_id` | Koho sleduje |
+| `timestamp` | Kdy |
+
+Unikátní klíč na `(user_id, recipient_id)`.

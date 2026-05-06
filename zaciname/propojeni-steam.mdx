@@ -1,0 +1,59 @@
+---
+title: "Propojení se Steamem"
+description: "Spárování účtu se Steam ID. Bez něj se nedostanete na herní server."
+icon: "gamepad-2"
+---
+
+Steam ID je pro DAYZERO komunitu důležitější než Discord — slouží jako jediný identifikátor hráče v DayZ a posílá se herním serverům pro whitelist a bany. **Bez propojeného Steamu nelze projít whitelistem a hrát.**
+
+## Co se propojí
+
+| Údaj | K čemu slouží |
+|------|---------------|
+| **Steam64 ID** (`76561198…`) | Unikátní identifikátor hráče. Posílá se serveru. |
+| **Persona name** | Veřejné jméno na Steamu. |
+| **Avatar URL** | Steam avatar. Můžete ho zobrazovat na profilu. |
+| **BattlEye GUID** | Hash odvozený ze Steam64. Server ho používá pro identifikaci na úrovni anti-cheatu. |
+
+## Postup propojení
+
+<Steps>
+  <Step title="Přihlaste se na portál">
+    Steam můžete propojit jen z přihlášeného účtu.
+  </Step>
+  <Step title="Otevřete Nastavení → Propojené účty">
+    Klikněte na **Propojit se Steamem**.
+  </Step>
+  <Step title="Přihlaste se ke Steamu">
+    Otevře se oficiální Steam stránka (OpenID 2.0). Zadejte přihlašovací údaje **přímo Steamu** — portál je nikdy nevidí.
+  </Step>
+  <Step title="Potvrzení">
+    Steam vás přesměruje zpět na portál. V profilu uvidíte **Steam64 ID** a Steam avatar.
+  </Step>
+</Steps>
+
+<Note>
+Portál Steam pouze ověří, ale nepřistupuje k vaší knihovně her ani k inventáři. Vidí jenom váš veřejný profil.
+</Note>
+
+## Co se stane po propojení
+
+1. **Whitelist žádost** — od této chvíle můžete podat žádost o vstup na herní server.
+2. **Statistiky postavy** — relay z herního serveru se začne mapovat na váš účet (na základě Steam64).
+3. **Achievement „Steam linked”** — odznak za propojení účtu.
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Můžu propojení změnit za jiný Steam účet?">
+    Můžete Steam odpojit a propojit jiný. Nicméně ztratíte historii session/statistik vázanou na původní Steam64.
+  </Accordion>
+  <Accordion title="Propojení selhalo s chybou „Steam ID už používá jiný účet”">
+    Pravděpodobně máte na portálu starší účet. Spojte se s adminem, pomohou účty sjednotit.
+  </Accordion>
+  <Accordion title="Co je BattlEye GUID a kde ho najdu?">
+    Není potřeba ho znát — server si ho dopočítá ze Steam64. Portál ho ukládá do pole `dz_be_hash`.
+  </Accordion>
+</AccordionGroup>
+
+Vývojářský pohled: [OAuth integrace → Steam](/vyvojari/oauth/steam).

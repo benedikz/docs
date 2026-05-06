@@ -1,0 +1,42 @@
+---
+title: "Kalendář akcí"
+description: "Plánované eventy DAYZERO komunity — od veřejných srazů po RP scénáře."
+icon: "calendar"
+---
+
+Kalendář (`/u/calendar`) zobrazuje nadcházející i minulé akce komunity. Spravují ho admini, ale vidět ho může každý.
+
+## Co se objeví v kalendáři
+
+- **Komunitní akce** — společná hraní, srazy, turnaje
+- **RP eventy** — naplánované scénáře (přepadení, vyjednávání, zdravotnické mise)
+- **Služební oznámení** — výpadky serveru, restarty, údržba
+
+## Pole akce
+
+| Pole | Popis |
+|------|-------|
+| `title` | Nadpis (max 128 znaků) |
+| `description` | Detailní popis akce |
+| `event_at` | Přesný datum a čas (ISO 8601) |
+| `thumbnail` | Volitelný obrázek (z `user_uploads`) |
+
+## Procházení kalendáře
+
+V navigaci klikněte na **Kalendář**. Můžete filtrovat podle měsíce — query parametry `year` a `month`.
+
+## Přidávání akcí
+
+Akce přidávají pouze admini. Pokud máte návrh, ozvěte se na komunálním Discordu nebo přímo adminům.
+
+## Jak se účastnit
+
+Účast je obvykle dobrovolná — stačí přijít na server v daný čas. Některé akce vyžadují registraci (zveřejněno v popisu akce).
+
+<Tip>
+Webhook `calendar.event.created` upozorní Discord kanál pokaždé, když admin přidá novou akci. Pokud sledujete komunální Discord, nic vám neunikne.
+</Tip>
+
+## Vývojářský pohled
+
+Endpointy: `GET /api/v1/calendar`, `POST /api/v1/calendar` (admin), `PUT /api/v1/calendar?id=...`, `DELETE /api/v1/calendar?id=...`. Detail v [API reference / Calendar](/vyvojari/api/reference/calendar).

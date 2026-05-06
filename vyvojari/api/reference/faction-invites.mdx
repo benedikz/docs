@@ -1,0 +1,50 @@
+---
+title: "Faction Invites"
+description: "Pozvánky do frakce — odeslat, přijmout, zrušit."
+icon: "mail-plus"
+---
+
+## `GET /api/v1/faction/:id/invites`
+
+Seznam pending pozvánek pro danou frakci. Jen LEADER.
+
+## `POST /api/v1/faction/:id/invites`
+
+Pošle pozvánku uživateli.
+
+**Body:** `{ "username": "pepa" }`
+
+**Pravidla:**
+
+- Jen LEADER.
+- Cílový uživatel nesmí být ve frakci (409).
+- Cooldown — při přemíře pozvánek 429.
+
+**Odpověď:** serializovaný invite objekt.
+
+## `PUT /api/v1/faction/:id/invites`
+
+Přijetí nebo odmítnutí (volá pozvaný).
+
+**Body:** `{ "action": "accept" }` nebo `{ "action": "decline" }`.
+
+**Pravidla:**
+
+- `accept` selže, pokud jste v jiné frakci (409). Nejprve opusťte.
+- Akce je nezvratná pro pozvaného.
+
+## `DELETE /api/v1/faction/:id/invites`
+
+Zrušení čekající pozvánky.
+
+**Body:** `{ "user_id": "..." }`
+
+**Pravidla:** Jen LEADER frakce.
+
+## Životní cyklus pozvánky
+
+```
+[odeslana] -> [accept | decline | revoke | expire]
+```
+
+`expire` aktuálně neexistuje — pozvánky neexpirují automaticky, dokud někdo neudělá akci.

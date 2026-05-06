@@ -1,0 +1,70 @@
+---
+title: "Characters"
+description: "CRUD pro postavy + akce kill a publish."
+icon: "users"
+---
+
+## `GET /api/v1/character/:id`
+
+Detail postavy.
+
+**Odpověď:** Plný objekt postavy s povinnými i volitelnými poli.
+
+## `POST /api/v1/character`
+
+Vytvoření nové postavy.
+
+**Body — povinné:**
+
+| Pole | Typ |
+|------|-----|
+| `face` | string (preset) |
+| `first_name` | max 56 |
+| `last_name` | max 56 |
+| `gender` | int (0/1) |
+| `age` | int 18–80 |
+| `birth_at` | YYYY-MM-DD |
+| `nationality` | string (CZ/SK/...) |
+| `morality` | UUID (FK na *moralities*) |
+| `class` | enum CIVILIAN/SOLDIER/MILITIA |
+
+**Body — volitelné:** `alias`, `middle_name`, `description`, `place_of_birth`, `education`, `marital_status`, `openness`, `positive_traits` (JSON array), `negative_traits`, `skills`, `military_*`.
+
+**Validace:** uživatel nesmí mít už 3 živé postavy (jinak 409).
+
+**Status po vytvoření:** `PENDING`.
+
+## `PUT /api/v1/character/:id`
+
+Edit postavy.
+
+**Pole upravitelná vlastníkem:** `alias`, `description`, traits, skills, avatar, banner.
+**Pole upravitelná adminem (review):** `status` (`APPROVED`/`DENIED`), `denial_reason`.
+
+**Klíčová pole** (jméno, věk, gender, class, morality, nationality) jsou po schválení uzamčená.
+
+## `POST /api/v1/character/:id?action=kill`
+
+Označení postavy jako mrtvé.
+
+**Body:** `{ "death_cause": "Zastřelen banditou" }` (max 128).
+
+**Efekt:** `is_alive = 0`, `death_at = now()`, `death_cause`.
+
+## `POST /api/v1/character/:id?action=publish`
+
+Zveřejnění mrtvé postavy jako memoriálu.
+
+**Předpoklad:** `is_alive = 0`.
+
+**Efekt:** nastaví `published_at`. Veřejný profil začne postavu zobrazovat.
+
+## `GET /api/v1/character/:id/stats`
+
+Herní statistiky postavy odvozené z relay dat.
+
+**Odpověď:** hodiny, kills, deaths, damage, weapon usage.
+
+## Notifikace
+
+Po schválení/zamítnutí dostává vlastník notifikaci typu `character.review`. Po smrti se spustí webhook `character.death`.

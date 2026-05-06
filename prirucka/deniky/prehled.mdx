@@ -1,0 +1,57 @@
+---
+title: "Co je deník postavy"
+description: "Strukturovaný RP zápisník vázaný ke konkrétní postavě."
+icon: "book-open"
+---
+
+Deník (Journal) je dlouhodobý zápisník, který si vede konkrétní postava. Slouží k zachycení významných událostí, RP vzpomínek a lore.
+
+## Vlastnosti deníku
+
+| Vlastnost | Hodnota |
+|-----------|---------|
+| Kdo vede deník | Vlastník postavy |
+| Počet záznamů | bez limitu |
+| Délka záznamu | bez limitu (rozumně) |
+| Formát obsahu | strukturované JSON bloky (zatím odstavce) |
+| Náhledový obrázek | volitelně, max 5 MB |
+| Viditelnost | PUBLIC / PROTECTED / PRIVATE |
+| Lajky | ano (od jiných uživatelů) |
+
+## Životní cyklus záznamu
+
+<Steps>
+  <Step title="Vytvoření">
+    Na detailu postavy → **Nový zápis**. Nadpis + obsah.
+  </Step>
+  <Step title="Publikace">
+    Po uložení záznam okamžitě platí podle zvolené viditelnosti.
+  </Step>
+  <Step title="Editace">
+    Záznam lze kdykoli upravit. V detailu se uloží `updated_at` a `updated_by`.
+  </Step>
+  <Step title="Smazání">
+    Smazat může majitel a admin. Akce je definitivní.
+  </Step>
+</Steps>
+
+## Frakční deník
+
+Vedle deníků postav existuje i **frakční deník** — sdílený zápisník celé frakce. Pravidla jsou podobná, jen vede ho frakce a určují ji její role. Detaily v [Frakce → Deník](/prirucka/frakce/denik).
+
+## Související
+
+<CardGroup cols={2}>
+  <Card title="Napsání zápisu" icon="pen-line" href="/prirucka/deniky/zapis">
+    Krok-po-kroku průvodce.
+  </Card>
+  <Card title="Viditelnost" icon="eye" href="/prirucka/deniky/viditelnost">
+    Kdo zápis vidí a kdo ne.
+  </Card>
+  <Card title="Lajky" icon="heart" href="/prirucka/deniky/lajky">
+    Reakce ostatních.
+  </Card>
+  <Card title="API reference" icon="code" href="/vyvojari/api/reference/character-journals">
+    Vývojářský pohled.
+  </Card>
+</CardGroup>

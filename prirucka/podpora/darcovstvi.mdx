@@ -1,0 +1,56 @@
+---
+title: "Dárcovství"
+description: "Podpořte provoz portálu a serveru reálnou platbou s QR kódem."
+icon: "heart"
+---
+
+DAYZERO běží díky dobrovolné podpoře komunity. Pokud chcete přispět, najdete na portálu sekci **Podpořit projekt** (`/u/support`), kde si vygenerujete QR kód pro platbu z banky.
+
+## Jak to funguje
+
+1. Vyberete **zemi** — Česko nebo Slovensko.
+2. Vyberete **částku** (40/80/120 CZK nebo 2/3/5 EUR), případně zadáte vlastní.
+3. Portál vygeneruje QR kód v příslušném standardu:
+   - **CZ**: SPAYD (česky používaný formát pro QR platby)
+   - **SK**: Pay By Square (slovenský standard)
+4. Naskenujete QR v bankovní aplikaci.
+5. Potvrdíte platbu.
+
+Příjemcem je transparentní účet, který provozuje DAYZERO komunita. Údaje jsou v QR předvyplněné, neměňte je.
+
+## Detaily přijímaných plateb
+
+| Země | IBAN | BIC |
+|------|------|-----|
+| CZ | `CZ8420100000002002211273` | FIOBCZPPXXX |
+| SK | `CZ8820100000002102315977` | FIOBCZPPXXX |
+
+V poli „Zpráva pro příjemce” je text „Dar na provoz a vývoj DAYZERO Portal.”
+
+## Jak se ověří, že platba dorazila
+
+Cron `PaymentCheckJob` se každých 30 minut dotáže FIO Bank API a přiřadí přijaté platby k uživatelům podle reference / variabilního symbolu. Po přiřazení můžete dostat:
+
+- Bonus v beans
+- Achievement *Patron* (nebo podobný — podle aktuální konfigurace)
+- Stálé „díky” v komunitě
+
+<Warning>
+Dárcovství je dobrovolné a nedává žádné herní výhody (pay-to-win neuznáváme). Slouží k pokrytí nákladů na server a portál.
+</Warning>
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Můžu darovat víc než přednastavené částky?">
+    Ano, formulář umožňuje vlastní hodnotu. Maximum je technicky 100 000 CZK / 4000 EUR (limit standardu), ale rozumná částka je libovolná.
+  </Accordion>
+  <Accordion title="Dostanu fakturu / potvrzení?">
+    Pro pravidelné větší dárce ano, na vyžádání. Kontakt: Discord admin.
+  </Accordion>
+  <Accordion title="Co když platba nedorazí?">
+    Synchronizace běží každých 30 minut. Pokud platba nedorazí ani po pár hodinách, ověřte, že jste použili správný účet a kontaktujte admina.
+  </Accordion>
+</AccordionGroup>
+
+Vývojářský pohled: [Subsystémy → Platby](/vyvojari/api/reference/support).

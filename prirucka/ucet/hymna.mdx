@@ -1,0 +1,71 @@
+---
+title: "Hymna (Anthem)"
+description: "Audio nahrávka spuštěná návštěvníkům na vašem profilu."
+icon: "music"
+---
+
+Hymna je krátká audionahrávka, která se přehraje přihlášeným návštěvníkům na vašem profilu. Slouží především jako stylistický prvek RP postavy nebo profilu hráče.
+
+## Technické limity
+
+| Položka | Hodnota |
+|---------|---------|
+| Formát | **OGG Vorbis** (`.ogg`) |
+| Maximální velikost | **10 MB** |
+| Pole `title` | max 50 znaků (název skladby) |
+| Pole `author` | max 32 znaků (volitelné) |
+| Cover | volitelný obrázek (max 5 MB) |
+
+<Note>
+MP3 a WAV nejsou podporované — kvůli velikosti a kompatibilitě s prohlížeči byl zvolen OGG Vorbis. Většina audio editorů (Audacity, ffmpeg) umí export do OGG bez problémů.
+</Note>
+
+## Postup nahrání
+
+<Steps>
+  <Step title="Otevřete Nastavení → Hymna">
+    Najdete v sekci profilu.
+  </Step>
+  <Step title="Vyberte audio soubor">
+    Soubor `.ogg` o velikosti maximálně 10 MB.
+  </Step>
+  <Step title="Vyplňte název a autora">
+    Název je povinný, autora doplnit nemusíte.
+  </Step>
+  <Step title="(Volitelně) přidejte cover">
+    Obrázek se zobrazí při přehrávání.
+  </Step>
+  <Step title="Uložte">
+    Hymna se okamžitě objeví na profilu.
+  </Step>
+</Steps>
+
+## Bezpečnostní omezení
+
+Audio soubor servíruje speciální endpoint **`anthem_gate.php`**, který:
+
+- ověřuje přihlášení (nepřihlášený uživatel hymnu neslyší),
+- chrání proti tzv. *path traversal* (cesta `..` a podobné),
+- podporuje **HTTP Range** požadavky pro rychlé převíjení.
+
+<Warning>
+Nahrávání hymny předpokládá, že máte k dílu právo. Nenahrávejte autorsky chráněnou hudbu, ke které nemáte licenci.
+</Warning>
+
+## Smazání hymny
+
+V Nastavení → Hymna klikněte na **Smazat**. Soubor se odstraní jak z databáze, tak z disku.
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Kolik hymen můžu mít?">
+    Jeden účet má jednu aktivní hymnu. Při nahrání nové se předchozí přepíše.
+  </Accordion>
+  <Accordion title="Proč hymna neslyšitelně přestane?">
+    Pravděpodobně proto, že jste dosáhli konce souboru. Další přehrávání závisí na vašem prohlížeči — některé hymnu loopují, jiné zastaví.
+  </Accordion>
+  <Accordion title="Jak udělat z MP3 OGG?">
+    `ffmpeg -i vstup.mp3 -c:a libvorbis -q:a 5 vystup.ogg` — kvalita 5 obvykle bohatě stačí.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,75 @@
+---
+title: "Achievements"
+description: "Správa achievementů a uživatelské získané odznaky."
+icon: "trophy"
+---
+
+## `GET /api/v1/achievements`
+
+Seznam všech achievementů (definice).
+
+**Odpověď:**
+
+```json
+{
+  "data": {
+    "items": [
+      {
+        "id": "uuid",
+        "name": "Steam Linked",
+        "rarity": "COMMON",
+        "description": "Propojený Steam účet",
+        "icon_url": "https://..."
+      }
+    ]
+  }
+}
+```
+
+## `POST /api/v1/achievements`
+
+(Admin) Vytvoření nového achievementu.
+
+**Body:**
+
+| Pole | Typ |
+|------|-----|
+| `name` | max 32 |
+| `rarity` | `COMMON`/`UNCOMMON`/`RARE`/`EPIC`/`LEGENDARY` |
+| `description` | text |
+| `icon_url` | URL |
+
+## `PUT /api/v1/achievement/:id`
+
+(Admin) Update achievementu.
+
+## `DELETE /api/v1/achievement/:id`
+
+(Admin) Smaže achievement. Smaže i všechna `user_achievements` záznam.
+
+## `GET /api/v1/user/achievements`
+
+Získané achievementy.
+
+**Query:** `user_id` (jen admin nebo self).
+
+**Odpověď:** seznam s `assigned_at` a `announced` flagem.
+
+## `POST /api/v1/user/achievements`
+
+(Admin) Ručně udělí achievement.
+
+**Body:** `{ "user_id": "...", "achievement_id": "..." }`
+
+## Mechanismus automatického udělování
+
+Cron `AchievementCheckJob` iteruje uživatele a checkery (`src/Core/Achievements/Checkers/`). Každý checker implementuje `AchievementCheckerInterface`:
+
+```php
+public function getAchievementId(): string;
+public function check(string $userId): bool;
+```
+
+Pokud `check()` vrátí `true` a uživatel achievement nemá, zavolá se `AchievementGranter::grantIfEarned()`.
+
+Detaily v [Subsystémy → Achievementy](/vyvojari/subsystemy/achievementy).

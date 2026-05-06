@@ -1,0 +1,60 @@
+---
+title: "Notifikace"
+description: "Co vám portál posílá a jak ovládat preference."
+icon: "bell"
+---
+
+Portál pracuje se dvěma druhy notifikací:
+
+1. **In-app notifikace** — zvonek v pravém horním rohu, ukládá se do databáze.
+2. **E-mailové notifikace** — informační zprávy odeslané na váš registrační e-mail.
+
+## In-app notifikace
+
+Zvonek vám ukáže poslední neaktivní zprávy. Mezi typické typy patří:
+
+- Schválení / zamítnutí postavy
+- Nová pozvánka do frakce
+- Přidělený achievement (odznak)
+- Vstup nového člena do vaší frakce
+- Reputace, kterou vám někdo dal
+
+Po přečtení můžete jednotlivé záznamy **označit jako přečtené** (interně se nastaví `active = 0`).
+
+## E-mailové notifikace
+
+Na e-mail se posílají hlavně transakční zprávy:
+
+- Aktivační kódy a 2FA OTP
+- Potvrzení změny e-mailu
+- Reset hesla
+- Důležité provozní oznámení (zveřejní admin)
+
+V Nastavení → Profil najdete dva přepínače:
+
+| Přepínač | Co znamená |
+|----------|------------|
+| **Systémové notifikace** (`notify_system`) | Provozní informace (povinné údaje, výpadky, změny pravidel). |
+| **Aktualizace a novinky** (`notify_updates`) | Nepovinný marketing — info o nových funkcích, výzvy, ankety. |
+
+<Note>
+Některé zprávy (2FA, aktivace, reset hesla) chodí vždy bez ohledu na nastavení. Slouží přímo k bezpečnému přístupu k účtu.
+</Note>
+
+## Jak označit vše jako přečtené
+
+V panelu zvonku použijte tlačítko **Přečíst vše**. V pozadí se zavolá `PUT /api/v1/notification/:id` pro každou aktivní položku.
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Můžu úplně vypnout všechny e-maily?">
+    Vypnutím obou přepínačů zůstanete jen na povinných (2FA, reset, aktivace). Marketing skončí.
+  </Accordion>
+  <Accordion title="Notifikace nepřišla na Discord">
+    Discord notifikace zatím nejsou implementovány na úrovni jednotlivých uživatelů — slouží pouze webhooky pro globální události (viz [admin webhooks](/vyvojari/subsystemy/webhooks)).
+  </Accordion>
+  <Accordion title="Smazal jsem notifikaci omylem">
+    Smazat notifikaci zatím nelze — pouze označit jako přečtenou. Pokud potřebujete obsah obnovit, ozvěte se adminovi.
+  </Accordion>
+</AccordionGroup>

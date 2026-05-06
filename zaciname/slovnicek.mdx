@@ -1,0 +1,50 @@
+---
+title: "Slovníček pojmů"
+description: "Krátké vysvětlení nejčastějších termínů, na které v dokumentaci a na portálu narazíte."
+icon: "book-marked"
+---
+
+<AccordionGroup>
+  <Accordion title="Whitelist">
+    Schvalovací seznam hráčů, kteří mají povolen vstup na herní server. Žádost se podává na portálu, schvaluje ji admin. Bez whitelistu se na server nedostanete.
+  </Accordion>
+  <Accordion title="Postava (Character)">
+    Vaše RP identita ve světě DAYZERO. Jedna postava = jedno jméno, věk, povolání a příběh. Můžete mít až **3 živé postavy** současně.
+  </Accordion>
+  <Accordion title="Frakce (Faction)">
+    Skupina hráčů sdružená pod jedním názvem. Má vůdce (LEADER) a členy (MEMBER). Frakce může být **otevřená** (kdokoli si zažádá) nebo **uzavřená** (jen na pozvánku).
+  </Accordion>
+  <Accordion title="Hymna (Anthem)">
+    Krátká audio nahrávka (.ogg), která se přehraje při návštěvě vašeho profilu. Slouží k „branding” RP postavy nebo profilu hráče.
+  </Accordion>
+  <Accordion title="Deník (Journal)">
+    Dlouhodobý zápisník postavy/frakce. Strukturované zápisy s nadpisem, textem a obrázky. Lze nastavit viditelnost: veřejný / chráněný / soukromý.
+  </Accordion>
+  <Accordion title="Reputace">
+    Sociální „palec nahoru” mezi hráči. Každý uživatel může druhému dát maximálně jednu reputaci.
+  </Accordion>
+  <Accordion title="Beans">
+    Virtuální měna portálu (slang z DayZu — fazole jsou základní jídlo). Získáte je za achievementy, hodiny ve hře a další aktivity.
+  </Accordion>
+  <Accordion title="Achievement / Odznak">
+    Automaticky udělované ocenění za splnění podmínek (např. *odehráno 100 hodin*, *založena frakce*, *propojený Steam*). Má rarity COMMON → LEGENDARY.
+  </Accordion>
+  <Accordion title="Relay">
+    Formát logů, které DayZ server posílá portálu. NDJSON soubor s eventy `BOOT`, `CONN`, `DISC`, `POS`, `VITAL`, `SHOT`, `DMG`, `KILL`, `ZKILL`. Detaily najdete v [Relay Format Spec](/vyvojari/dayz/relay-format).
+  </Accordion>
+  <Accordion title="2FA">
+    Dvoufaktorové ověření při přihlášení. Po zadání hesla vám dorazí 6místný kód e-mailem. Platnost 30 minut.
+  </Accordion>
+  <Accordion title="OAuth2">
+    Standard pro přihlášení přes externí službu (Discord, Steam). Místo dalšího hesla použijete účet, který už máte.
+  </Accordion>
+  <Accordion title="Steam64 / BE GUID">
+    *Steam64* je 17místné číslo Steam účtu (`76561198…`). *BE GUID* je BattlEye identifikátor odvozený z něj — používá ho herní server pro identifikaci hráčů a bany.
+  </Accordion>
+  <Accordion title="Webhook">
+    Automatická HTTP zpráva, kterou portál pošle například na Discord při události typu „postava zemřela” nebo „nová whitelist žádost”. Používají ji jen admini.
+  </Accordion>
+  <Accordion title="Pay By Square / SPAYD">
+    Standardy QR kódů pro platby. SPAYD je český, Pay By Square je slovenský. Portál je generuje pro dárcovství.
+  </Accordion>
+</AccordionGroup>

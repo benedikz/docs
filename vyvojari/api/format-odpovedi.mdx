@@ -1,0 +1,103 @@
+---
+title: "Formát odpovědi"
+description: "JSON envelope, kterou používá každý API endpoint."
+icon: "braces"
+---
+
+Všechny API endpointy vrací standardní JSON envelope se třemi poli: `status`, `data`, `message`.
+
+## Úspěch
+
+```json
+{
+  "status": "ok",
+  "data": {
+    "user_id": "8b8f...",
+    "username": "pepa"
+  },
+  "message": null
+}
+```
+
+| Pole | Význam |
+|------|--------|
+| `status` | `"ok"` při úspěchu. |
+| `data` | Payload — objekt nebo pole. Může být `null`, pokud endpoint nic nevrací. |
+| `message` | Lidsky čitelná zpráva (např. „Postava byla schválena”). U úspěchu obvykle `null`. |
+
+## Chyba
+
+```json
+{
+  "status": "error",
+  "data": null,
+  "message": "Uživatel není přihlášen."
+}
+```
+
+| Pole | Význam |
+|------|--------|
+| `status` | `"error"`. |
+| `data` | Často `null`. Někdy obsahuje validační chyby per pole. |
+| `message` | Krátký popis chyby (lokalizovaný). |
+
+## Validační chyby
+
+Pokud endpoint vrátí `400 Bad Request` kvůli validaci, payload může mít strukturu:
+
+```json
+{
+  "status": "error",
+  "data": {
+    "errors": {
+      "username": "Toto pole je povinné.",
+      "age": "Hodnota mimo rozsah 18–80."
+    }
+  },
+  "message": "Některá pole nejsou vyplněna správně."
+}
+```
+
+## Paginace
+
+Endpointy s listem typicky vrací:
+
+```json
+{
+  "status": "ok",
+  "data": {
+    "items": [...],
+    "total": 142,
+    "page": 1,
+    "limit": 20
+  }
+}
+```
+
+| Pole | Význam |
+|------|--------|
+| `items` | Pole záznamů aktuální stránky. |
+| `total` | Celkový počet záznamů odpovídajících filtru. |
+| `page` | Aktuální stránka (1-based). |
+| `limit` | Velikost stránky. |
+
+Některé starší endpointy používají `offset` místo `page` — v reference je to vždy uvedeno.
+
+## HTTP statusy
+
+| Status | Význam |
+|--------|--------|
+| 200 OK | Úspěch s odpovědí. |
+| 201 Created | Úspěšně vytvořeno (POST). |
+| 204 No Content | Úspěch bez body (např. DELETE). |
+| 400 Bad Request | Validační chyba. |
+| 401 Unauthorized | Nejste přihlášený. |
+| 403 Forbidden | Přihlášen ale bez práv. |
+| 404 Not Found | Záznam neexistuje. |
+| 409 Conflict | Konflikt (např. duplikát). |
+| 429 Too Many Requests | Rate limit. |
+| 500 Internal Server Error | Neočekávaná chyba. |
+
+## Lokalizace zpráv
+
+`message` je vždy v jazyce sezení (default `cs_CZ`). Pokud klient potřebuje jiný jazyk, posílá `Accept-Language` hlavičku — server vybere nejvhodnější.

@@ -1,0 +1,64 @@
+---
+title: "Stav žádosti"
+description: "Co znamenají jednotlivé stavy a co dělat dál."
+icon: "circle-check"
+---
+
+Po odeslání žádosti uvidíte na `/u/whitelist` aktuální stav. Postupem času se může měnit.
+
+## Možné stavy
+
+<CardGroup cols={3}>
+  <Card title="PENDING" icon="clock">
+    Žádost čeká na posouzení adminem.
+  </Card>
+  <Card title="APPROVED" icon="check">
+    Schváleno. Steam ID se přidá do exportu pro server.
+  </Card>
+  <Card title="DENIED" icon="x">
+    Zamítnuto. V `denial_reason` najdete důvod.
+  </Card>
+</CardGroup>
+
+## Co znamená APPROVED
+
+- Vaše Steam ID se objeví v exportu, který portál denně synchronizuje na server.
+- Většinou do hodiny od schválení můžete na server.
+- Notifikace s potvrzením dorazí na portál i e-mailem.
+- Pokud se na server stále nedostanete, počkejte na nejbližší běh `WhitelistSyncJob` nebo se ozvěte adminům.
+
+## Co znamená DENIED
+
+- V detailu žádosti vidíte důvod (max 512 znaků).
+- Můžete podat **novou žádost**. Stará zůstane v historii s počítadlem `attempt`.
+- Po pár neúspěšných pokusech zvažte konzultaci v Discordu — admini řeknou, co konkrétně.
+
+## Sledování stavu
+
+Stav vidíte:
+
+- Na `/u/whitelist` (přímo)
+- V notifikacích (po každé změně)
+
+## Jak admin rozhoduje
+
+Posouzení je ruční. Admin si přečte odpovědi, ověří Steam profil (počet odehraných hodin DayZ) a rozhodne. Hodnotí:
+
+- Důvěryhodnost odpovědí
+- Soulad s pravidly serveru
+- Zkušenosti s RP / DayZ
+- Případné předchozí bany
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Jak dlouho schválení trvá?">
+    Typicky **do 48 hodin**. V mimořádných případech (víkendy, dovolené adminů) déle.
+  </Accordion>
+  <Accordion title="Můžu po schválení podat další žádost?">
+    Není potřeba — schválení platí dlouhodobě. Nová žádost by se odmítla s `409 Conflict`.
+  </Accordion>
+  <Accordion title="Co když jsem byl vyhozen ze serveru?">
+    Whitelist se neobnoví automaticky. Nejprve řešte ban / sankci s adminem; pak případně podejte novou žádost.
+  </Accordion>
+</AccordionGroup>

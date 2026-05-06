@@ -1,0 +1,38 @@
+---
+title: "Získávání Beans"
+description: "Co všechno přináší beans a kolik."
+icon: "trending-up"
+---
+
+Beans se dají získat pasivně (za hraní a aktivitu) nebo aktivně (za splnění achievementů a podobných milníků).
+
+## Typické zdroje
+
+| Zdroj | Hodnota | Mechanismus |
+|-------|---------|-------------|
+| Achievement udělen | +250 (rámcově) | Při udělení odznaku |
+| Reputace přijatá | +100 | Když vám někdo dá reputaci |
+| Hodina ve hře | +50 | Každá celá hodina z relay (VITAL events) |
+| Nový člen frakce | +X | Při přijetí pozvánky (jen LEADER) |
+
+<Note>
+Hodnoty jsou orientační. Přesné částky se mohou měnit podle balancu, který nastavují admini.
+</Note>
+
+## Co beans nedělají
+
+- Neodemykají postavy ani frakce.
+- Nelze je směnit za reálnou měnu.
+- Nepřevádí se mezi účty (žádné posílání).
+
+## Záznam o transakci
+
+Každá změna beans se ukládá jako řádek v tabulce `beans` s polem `amount` a časem. Historie je ve vašem profilu chronologicky řazená.
+
+## Korekce adminem
+
+Pokud byste získali beans omylem (chyba systému, podvod), admin může transakci stáhnout — ve výpisu uvidíte pole `cleared_at` a `cleared_by`.
+
+## API
+
+Endpoint `GET /api/v1/user/:id/beans` vrátí zůstatek a transakce. Detaily v [API reference / Beans](/vyvojari/api/reference/beans).

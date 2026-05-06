@@ -1,0 +1,55 @@
+---
+title: "Reputace"
+description: "Sociální „palec nahoru” — jednorázové ocenění mezi hráči."
+icon: "thumbs-up"
+---
+
+Reputace je veřejný projev uznání. Každý uživatel může jinému uživateli dát **právě jednu** reputaci. Slouží jako tichá pochvala, výraz důvěry nebo poděkování.
+
+## Pravidla
+
+- Jeden uživatel = jedna reputace pro daného příjemce.
+- Lze ji **odebrat** (a později třeba znovu dát).
+- Sám sobě nelze.
+- Reputace je veřejná — viditelný je dárce i příjemce.
+
+## Dání reputace
+
+<Steps>
+  <Step title="Otevřete profil hráče">
+    `/u/{username}`
+  </Step>
+  <Step title="Klikněte na „Dát reputaci”">
+    Tlačítko v sekci sociálních akcí.
+  </Step>
+  <Step title="Hotovo">
+    Hráč dostane notifikaci a počítadlo reputace na jeho profilu se zvýší.
+  </Step>
+</Steps>
+
+## Odebrání reputace
+
+Pokud si to rozmyslíte, klikněte na stejné tlačítko (zobrazí se jako **Odebrat reputaci**). Změna se aplikuje okamžitě.
+
+## Výpis
+
+Na profilu vidíte:
+
+- **Příchozí** — kdo dal reputaci vám
+- **Odchozí** — komu jste dali reputaci
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Můžu mít neomezený počet reputací?">
+    Ano, nesete-li ji dál. Limit je *jeden vztah* (vy → příjemce), ne celkový počet.
+  </Accordion>
+  <Accordion title="Co když mi někdo dá reputaci za hej?">
+    Můžete ji ignorovat. Veřejně se zobrazí, ale technicky vám nic nedá ani nevezme. Pokud jde o obtěžování, řešte přes admina.
+  </Accordion>
+  <Accordion title="Jak to souvisí s achievementy?">
+    Některé achievementy se udělují za počet daných nebo přijatých reputací. Detail v [Achievementy](/prirucka/komunita/achievementy).
+  </Accordion>
+</AccordionGroup>
+
+Z pohledu vývojáře: `POST /api/v1/reputations`, `DELETE /api/v1/reputations`. [API reference](/vyvojari/api/reference/reputations).

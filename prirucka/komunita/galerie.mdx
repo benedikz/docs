@@ -1,0 +1,67 @@
+---
+title: "Galerie"
+description: "Vaše osobní album fotek a screenshotů."
+icon: "image"
+---
+
+Galerie je sekce vašeho profilu, kam nahráváte obrázky — RP screenshoty, fan art, memy nebo cokoli, co chcete sdílet.
+
+## Limity
+
+| Položka | Hodnota |
+|---------|---------|
+| Maximum fotek | bez limitu (rozumně) |
+| Velikost jedné | **5 MB** |
+| Formáty | JPG / JPEG / PNG / GIF |
+| Pole `title` | max 64 znaků |
+| Pole `description` | volitelné |
+| Pole `ai_label` | boolean — označte, pokud jde o AI obsah |
+
+## Nahrání obrázku
+
+<Steps>
+  <Step title="Otevřete vlastní profil">
+    `/u/{username}` → tab **Galerie**.
+  </Step>
+  <Step title="Klikněte na „Přidat obrázek”">
+    Otevře se upload formulář.
+  </Step>
+  <Step title="Vyplňte detaily">
+    Soubor, nadpis, případně popis. Pokud jde o AI, zaškrtněte **AI label**.
+  </Step>
+  <Step title="Nahrajte">
+    Obrázek se objeví v galerii a v profilu.
+  </Step>
+</Steps>
+
+## Lajky
+
+Pod každým obrázkem najdete srdíčko. Pravidla:
+
+- Cizí obrázky lze lajkovat.
+- Vlastní obrázky lajkovat nelze.
+- Lajk je togglovatelný (klik znovu = odebrání).
+- Endpoint: `POST /api/v1/user/:user_id/gallery/i/:item_id/like`.
+
+## Smazání
+
+Otevřete detail fotky → tlačítko **Smazat**. Akce je definitivní. Smazat může pouze vlastník (nebo admin).
+
+## Tipy
+
+<CardGroup cols={2}>
+  <Card title="AI obsah" icon="sparkles">
+    Pokud používáte AI generaci, vždy ji označte. Komunita to oceňuje a předchází se zmatkům.
+  </Card>
+  <Card title="Citlivý obsah" icon="alert-triangle">
+    Galerie je veřejná. Nesdílejte fotky, které by mohly identifikovat hráče v reálu, pokud nemáte jejich svolení.
+  </Card>
+  <Card title="Optimalizace" icon="zap">
+    Před uploadem stáhněte rozlišení na rozumnou hodnotu (1920 × 1080 stačí). Šetříte úložiště i šířku pásma.
+  </Card>
+  <Card title="Vodoznak" icon="signature">
+    Pokud jde o vlastní art, zvažte vodoznak — galerie je veřejná a obrázky se mohou šířit.
+  </Card>
+</CardGroup>
+
+Vývojářský pohled: [API reference / Gallery](/vyvojari/api/reference/gallery).

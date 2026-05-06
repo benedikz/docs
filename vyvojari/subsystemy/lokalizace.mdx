@@ -1,0 +1,111 @@
+---
+title: "Lokalizace"
+description: "Více jazyků a custom překlady přes admin panel."
+icon: "languages"
+---
+
+Implementace v `src/Core/Localization/Translator.php`. Načítá překlady z JSON souborů, podporuje overrides z DB.
+
+## Podporované jazyky
+
+| Locale | Jazyk |
+|--------|-------|
+| `cs_CZ` | Čeština (primární) |
+| `sk_SK` | Slovenština |
+| `en_US` | English |
+| `pl_PL` | Polski |
+| `ru_RU` | Русский |
+| `uk_UA` | Українська |
+
+## Soubory
+
+```
+lang/
+├── cs_CZ.json       ← výchozí překlady
+├── sk_SK.json
+├── en_US.json
+├── pl_PL.json
+├── ru_RU.json
+├── uk_UA.json
+└── custom/          ← admin overrides (DB-backed)
+    ├── cs_CZ.json
+    └── ...
+```
+
+## Formát
+
+Flat objekt klíč → hodnota:
+
+```json
+{
+  "_button.save": "Uložit",
+  "_button.cancel": "Zrušit",
+  "_label.username": "Uživatelské jméno",
+  "_email.activation.subject": "Aktivace účtu DAYZERO",
+  "_email.activation.body": "Vítej, {username}. Klikni na odkaz: {link}"
+}
+```
+
+## Klíčové prefixy
+
+| Prefix | Použití |
+|--------|---------|
+| `_button.*` | Tlačítka |
+| `_label.*` | Form labely a krátké popisky |
+| `_heading.*` | Nadpisy |
+| `_email.*` | E-mailové šablony (subject + body) |
+| `_menu.*` | Položky menu |
+| `_chart.*` | Popisky grafů |
+| `_morality.*` | Názvy moralit |
+| `_custom.*` | Admin-defined overrides |
+
+## Použití v kódu
+
+```php
+$translator = Container::get(Translator::class);
+echo $translator->translate('_label.username', $locale = 'cs_CZ');
+
+// S placeholdery:
+echo $translator->translate('_email.activation.body', 'cs_CZ', [
+    'username' => $user->username,
+    'link' => $activationLink,
+]);
+```
+
+## Custom překlady (admin)
+
+Admin přes `/a/configuration/localization` nebo přes API (`POST /api/v1/admin/config/localization`) přidává klíče s prefixem `_`. Ty:
+
+- Ukládají se do tabulky DB.
+- Při načítání se merguje s file-based překlady, **DB má prioritu** (override).
+- Změny jsou okamžité (žádný restart).
+
+## Fallback
+
+Pokud klíč neexistuje v daném locale, zkusí se `en_US`. Pokud ani tam, vrátí se klíč jako string. To pomáhá najít chybějící překlady — v UI uvidíte `_label.foo` místo "smysluplné slovo".
+
+## Detekce locale
+
+Pořadí:
+
+1. Query parametr `?lang=cs_CZ`
+2. Cookie `lang` (uloží se po explicitní volbě)
+3. Hlavička `Accept-Language`
+4. Default `cs_CZ`
+
+## Přidání nového jazyka
+
+<Steps>
+  <Step title="Vytvořte lang/<locale>.json">
+    Zkopírujte `cs_CZ.json` jako šablonu.
+  </Step>
+  <Step title="Přeložte všechny klíče">
+    I prefixy zachovejte (jen hodnoty se mění).
+  </Step>
+  <Step title="Přidejte locale do enums">
+    Pole `Translator::SUPPORTED_LOCALES`.
+  </Step>
+  <Step title="Doplňte UI selector">
+    V `_menu.locale.*` doplňte název jazyka.
+  </Step>
+</Steps>

@@ -1,0 +1,52 @@
+---
+title: "Frakční galerie"
+description: "Sdílený fotoalbum frakce — herní screenshoty, společné momenty, propagace."
+icon: "images"
+---
+
+Frakční galerie funguje podobně jako [osobní galerie](/prirucka/komunita/galerie), ale nepatří jednotlivci, nýbrž frakci. Příspěvky vidí všichni návštěvníci profilu frakce.
+
+## Pravidla
+
+- Přidávat můžou všichni členové frakce (LEADER i MEMBER).
+- Smazat může majitel příspěvku a LEADER (moderace).
+- Limity jednotlivého obrázku: max **5 MB**, formáty JPG/JPEG/PNG/GIF.
+- Pole: `title` (max 64 znaků), `description` (volitelný), `ai_label` (zaškrtnete, pokud jde o AI generovaný obsah).
+
+## Nahrání obrázku
+
+<Steps>
+  <Step title="Otevřete profil frakce">
+    `/f/{slug}/gallery`
+  </Step>
+  <Step title="Klikněte na „Přidat obrázek”">
+    Otevře se upload formulář.
+  </Step>
+  <Step title="Vyberte soubor a popis">
+    Krátký nadpis, případně popis nebo AI label.
+  </Step>
+  <Step title="Nahrajte">
+    Příspěvek se objeví ve frakční galerii a v karuselu na profilu frakce.
+  </Step>
+</Steps>
+
+## Smazání
+
+Klikněte na fotku → tlačítko **Smazat**. Smaže ji buď autor, nebo LEADER. Soubor se odstraní z disku i databáze.
+
+<Tip>
+LEADER má povinnost moderace — pokud se v galerii objeví obsah, který nepatří k frakci nebo porušuje pravidla, smažte ho proaktivně. Admini si občas obsah procházejí náhodně.
+</Tip>
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Můžu sdílet screenshoty z herního serveru?">
+    Ano, je to typické využití. Pokud jsou na nich identifikační údaje jiných hráčů (Discord IDs, plná jména), zvažte rozmazání.
+  </Accordion>
+  <Accordion title="Můžu nahrát meme nebo edit?">
+    Pokud souvisí s frakcí, ano. Označte AI obsah pole `ai_label` — komunita si toho cení.
+  </Accordion>
+</AccordionGroup>
+
+Vývojářský pohled: [API reference / Faction Gallery](/vyvojari/api/reference/faction-gallery).

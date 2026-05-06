@@ -1,0 +1,108 @@
+---
+title: "Konfigurace"
+description: "Soubor app.json, secrety a runtime nastavení."
+icon: "settings"
+---
+
+Všechna konfigurace žije ve třech JSON souborech v `config/`. Žádné `.env`, žádné prostředí — vše je explicitně v repozitáři (s tím, že produkční verze obsahuje skutečné secrety a do gitu nepatří).
+
+## `config/app.json`
+
+Hlavní konfigurace. Strukturně:
+
+```json
+{
+  "app": {
+    "name": "DAYZERO PORTAL",
+    "version": "2025.2",
+    "developer_mode": true,
+    "rooturl": "https://dayzero.cz/portal",
+    "cron_secret": "<random-32-chars>"
+  },
+  "db": {
+    "host": "localhost",
+    "database": "u665790508_cms",
+    "username": "...",
+    "password": "..."
+  },
+  "mail": {
+    "host": "smtp.hostinger.com",
+    "port": 587,
+    "encryption": "tls",
+    "from_address": "automat@dayzero.cz",
+    "from_name": {
+      "cs": "Portál DAYZERO.CZ",
+      "en": "DAYZERO.CZ Portal"
+    }
+  },
+  "oauth2": {
+    "discord": {
+      "client_id": "...",
+      "client_secret": "...",
+      "redirect_uri": ".../api/v1/auth/providers/discord?action=callback",
+      "scopes": "identify email guilds.join"
+    },
+    "steam": {
+      "api_key": "...",
+      "redirect_uri": ".../api/v1/auth/providers/steam?action=callback"
+    }
+  },
+  "upload": {
+    "base_path": "/.../uploads",
+    "public_url": "/portal/uploads",
+    "images": { "max_size": 5242880, "extensions": ["jpg","jpeg","png","gif"] },
+    "anthems": { "max_size": 10485760, "extensions": ["ogg"] }
+  },
+  "whitelist": {
+    "questions": [
+      { "id": "experience", "type": "select", "required": true,
+        "label_key": "_label.whitelist.q.experience",
+        "options": [...] }
+    ]
+  },
+  "support": {
+    "iban": { "cz": "CZ8420...", "sk": "CZ8820..." },
+    "bic": "FIOBCZPPXXX",
+    "amounts": { "cz": [40,80,120], "sk": [2,3,5] },
+    "currency": { "cz": "CZK", "sk": "EUR" }
+  }
+}
+```
+
+### Klíčové sekce
+
+| Sekce | Smysl |
+|-------|-------|
+| `app.cron_secret` | Tajný klíč pro `cron.php?key=…` — nesdílejte. |
+| `app.developer_mode` | True zapne podrobné chybové hlášky. V produkci `false`. |
+| `db.*` | DB credentials (PDO). |
+| `mail.*` | SMTP credentials a default sender. |
+| `oauth2.discord` | Discord OAuth2 aplikace — `client_id`, `client_secret`, callback URL. |
+| `oauth2.steam` | Steam Web API key. |
+| `upload.*` | Limity uploadů a fyzická cesta. |
+| `whitelist.questions` | Konfigurace otázek pro whitelist žádost. |
+| `support.iban` / `support.amounts` | Konfigurace dárcovství (QR kódy). |
+
+## `config/routes.json`
+
+Pole route definic — viz [Routing](/vyvojari/routing).
+
+## `config/api.json`
+
+Per-endpoint nastavení (typicky rate limit overrides). Pokud není zadáno, platí default 30 req / 60 s.
+
+## Secrets
+
+Citlivé hodnoty (`db.password`, `oauth2.*.client_secret`, `app.cron_secret`):
+
+- V produkci jsou v `config/app.json` přímo na serveru.
+- V repozitáři se buď vůbec nenachází, nebo se používá `.example` šablona.
+- Žádný secret rotation systém — případnou výměnu řešíte ručně.
+
+<Warning>
+Pokud `cron_secret` unikne, kdokoli může spouštět cron joby. Ihned ho přepište a invalidujte staré.
+</Warning>
+
+## Konfigurační runtime
+
+Třída `Core/Config.php` načítá soubory při bootu, cachuje je jako PHP objekt. Změny v souboru vyžadují **reload procesu** (FPM / Apache).

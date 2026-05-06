@@ -1,0 +1,56 @@
+---
+title: "Notifications"
+description: "In-app notifikační systém."
+icon: "bell"
+---
+
+## `GET /api/v1/notifications`
+
+Seznam aktivních (`active = 1`) notifikací aktuálního uživatele.
+
+**Odpověď:**
+
+```json
+{
+  "data": {
+    "items": [
+      {
+        "id": "uuid",
+        "content": { "type": "character.review", "character_id": "...", "status": "APPROVED" },
+        "created_at": "2025-05-01T10:00:00Z"
+      }
+    ]
+  }
+}
+```
+
+`content` je JSON blob s libovolnou strukturou — typ určují generujicí services.
+
+## `PUT /api/v1/notification/:id`
+
+Označí notifikaci jako přečtenou (`active = 0`).
+
+**Body:** `{ "read": true }` (nebo prostě prázdný — implementace vyhodnotí).
+
+## Typy notifikací
+
+| `content.type` | Trigger |
+|----------------|---------|
+| `character.review` | Postava schválena/zamítnuta |
+| `faction.invite` | Pozvánka do frakce |
+| `achievement.granted` | Udělen achievement |
+| `reputation.received` | Někdo dal reputaci |
+| `group.assigned` | Přiřazena role |
+
+## Datový model
+
+Tabulka `notifications`:
+
+| Sloupec | Význam |
+|---------|--------|
+| `id` | UUID |
+| `recipient_id` | FK users |
+| `active` | 1 = nepřečtená |
+| `content` | JSON |
+| `created_at` / `created_by` | meta |
+| `updated_at` / `updated_by` | meta |

@@ -1,0 +1,51 @@
+---
+title: "Sledování (Follow)"
+description: "Označte hráče, jejichž aktivitu chcete sledovat."
+icon: "user-round-plus"
+---
+
+Sledování je obousměrný sociální vztah — vy někoho sledujete, někdo sleduje vás. Slouží jako neformální oblíbený seznam (na Discordu / Twitteru tomu říkají *follow*).
+
+## K čemu to slouží
+
+- Rychlý přístup k profilům přátel z navigace
+- Notifikace o vybrané aktivitě (publikace deníku, smrt postavy — připravujeme)
+- Veřejné gesto „mám rád/a tvůj obsah”
+
+## Sledování hráče
+
+<Steps>
+  <Step title="Otevřete profil hráče">
+    `/u/{username}`
+  </Step>
+  <Step title="Klikněte na „Sledovat”">
+    Tlačítko v hlavičce profilu.
+  </Step>
+  <Step title="Hotovo">
+    Profil se objeví v sekci **Sledovaní** ve vašem profilu.
+  </Step>
+</Steps>
+
+## Přestat sledovat
+
+Stejné tlačítko se po prvním kliknutí přepne na **Přestat sledovat**. Klik = odebrání ze seznamu.
+
+## Kdo mě sleduje
+
+Na vlastním profilu uvidíte seznam **Sledujících**. Veřejně se zobrazuje obousměrně, takže se vrátí, kdo je vidí na vás.
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Můžu sledovat sám sebe?">
+    Ne, formulář to odmítne.
+  </Accordion>
+  <Accordion title="Jaký je rozdíl mezi sledováním a reputací?">
+    Sledování je „přihlásil jsem se k odběru”. Reputace je „dávám ti palec nahoru”. Reputace je jednorázová, sledování průběžné.
+  </Accordion>
+  <Accordion title="Lze sledování zablokovat?">
+    Aktuálně ne. Pokud máte problém s konkrétním uživatelem, řešte to přes admina.
+  </Accordion>
+</AccordionGroup>
+
+Z pohledu vývojáře: endpoint `POST /api/v1/follows` (sledovat), `DELETE /api/v1/follows` (odhlásit). [API reference](/vyvojari/api/reference/follows).

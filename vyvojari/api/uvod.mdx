@@ -1,0 +1,81 @@
+---
+title: "REST API — úvod"
+description: "Základní informace o API: base URL, formáty, autentizace a verzování."
+icon: "terminal"
+---
+
+DAYZERO Portál vystavuje REST API verze **v1**. Frontend ho používá interně, externí integrace stejné endpointy.
+
+## Base URL
+
+```
+https://dayzero.cz/portal/api/v1
+```
+
+V testovacím prostředí (developer mode) je root URL nastavený v `app.json` (`app.rooturl`).
+
+## Verzování
+
+API je verzované cestou (`/api/v1/...`). Future verze by měla být `/api/v2/...`. Aktuálně existuje pouze v1.
+
+## Content Type
+
+Vždy **JSON**:
+
+- Request: `Content-Type: application/json` (kromě uploadů, které jsou `multipart/form-data`).
+- Response: `Content-Type: application/json; charset=utf-8`.
+
+## Autentizace
+
+Session-based, přes cookie. Detail v [Autentizace](/vyvojari/api/autentizace).
+
+## Formát odpovědi
+
+Standardizovaný envelope:
+
+```json
+{
+  "status": "ok",
+  "data": { ... },
+  "message": null
+}
+```
+
+Detail v [Formát odpovědi](/vyvojari/api/format-odpovedi).
+
+## Chybové kódy
+
+HTTP statusy + JSON s polem `status: "error"`. Detail v [Chybové kódy](/vyvojari/api/chyby).
+
+## Rate limiting
+
+Default 30 požadavků za 60 sekund per IP per endpoint. Přesnější mechanika v [Rate limiting](/vyvojari/api/rate-limiting).
+
+## Reference
+
+Po levé straně najdete kompletní seznam endpointů rozdělený do skupin:
+
+<CardGroup cols={2}>
+  <Card title="Auth" icon="key" href="/vyvojari/api/reference/auth">
+    Login, register, 2FA, recovery, OAuth.
+  </Card>
+  <Card title="Users" icon="user" href="/vyvojari/api/reference/users">
+    Profil, search, layout, devices, anthem.
+  </Card>
+  <Card title="Characters" icon="users" href="/vyvojari/api/reference/characters">
+    CRUD a kill/publish.
+  </Card>
+  <Card title="Factions" icon="shield" href="/vyvojari/api/reference/factions">
+    Frakce, členové, role.
+  </Card>
+  <Card title="Admin" icon="cog" href="/vyvojari/api/reference/admin">
+    Admin endpointy (users, whitelists, webhooks).
+  </Card>
+  <Card title="Achievements" icon="trophy" href="/vyvojari/api/reference/achievements">
+    Achievement správa a uživatelské.
+  </Card>
+</CardGroup>
+
+## Spadá pod „experimentální”?
+
+Některé endpointy mají v `API.md` pomocnou poznámku — v komentáři / popisu. Pokud ho voláte z externí integrace, raději si ověřte, jestli endpoint není experimentální (může se měnit bez upozornění).

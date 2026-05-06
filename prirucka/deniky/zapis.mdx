@@ -1,0 +1,59 @@
+---
+title: "Napsání zápisu"
+description: "Krok za krokem od myšlenky po publikovaný záznam."
+icon: "pen-line"
+---
+
+## Postup
+
+<Steps>
+  <Step title="Otevřete detail postavy">
+    `/u/character/{id}`
+  </Step>
+  <Step title="Klikněte na „Nový zápis”">
+    Otevře se editor.
+  </Step>
+  <Step title="Vyplňte nadpis">
+    Max 128 znaků. Doporučujeme datum nebo téma:
+    - „Den 15 — Střet u Cherna”
+    - „První zima”
+    - „Setkání s frakcí Severní cesta”
+  </Step>
+  <Step title="Napište obsah">
+    Editor pracuje s **odstavci**. Klávesa Enter ukončí odstavec a začne nový.
+  </Step>
+  <Step title="Zvolte viditelnost">
+    PUBLIC / PROTECTED / PRIVATE — viz [Viditelnost](/prirucka/deniky/viditelnost).
+  </Step>
+  <Step title="Volitelně přidejte náhled">
+    Obrázek (JPG/PNG/GIF, max 5 MB) se zobrazí v seznamu zápisů.
+  </Step>
+  <Step title="Uložte">
+    Záznam je okamžitě aktivní podle zvolené viditelnosti.
+  </Step>
+</Steps>
+
+## Doporučení k obsahu
+
+<CardGroup cols={2}>
+  <Card title="První osoba" icon="user">
+    Píšete deník postavy, ne reportáž. Ich-forma sedí nejlíp.
+  </Card>
+  <Card title="Konkrétní místa a jména" icon="map-pin">
+    Cherna, Krasnostav, mlha, „Tomáš mi řekl”. Detaily oživí příběh.
+  </Card>
+  <Card title="Vyhněte se OOC poznámkám" icon="ban">
+    Out-of-character komentáře patří mimo deník (Discord, fórum).
+  </Card>
+  <Card title="Délka neomezená, kvalita ano" icon="ruler">
+    Krátký zápis je lepší než žádný; dlouhý jen pokud má co říct.
+  </Card>
+</CardGroup>
+
+## Úprava existujícího záznamu
+
+Otevřete deník, najděte konkrétní zápis a klikněte na **Upravit**. Po uložení se aktualizuje `updated_at`. Historie verzí se neukládá — pokud chcete zachovat starou verzi, použijte nový zápis.
+
+## Co se děje na pozadí
+
+Při uložení portál volá `POST /api/v1/character/:id/journal`. Obsah se ukládá jako JSON pole bloků `[{ "type": "paragraph", "text": "..." }, ...]`.

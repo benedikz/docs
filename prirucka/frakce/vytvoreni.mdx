@@ -1,0 +1,63 @@
+---
+title: "Vytvoření frakce"
+description: "Postup pro založení nové frakce."
+icon: "plus"
+---
+
+Frakce je veřejná identita skupiny hráčů. Vytvořit ji může kterýkoli uživatel, který **není** v žádné jiné frakci.
+
+## Předpoklady
+
+<Check>Aktivovaný účet, nejlépe s propojeným Steamem.</Check>
+<Check>Nejste členem jiné frakce.</Check>
+<Check>Promyšlený název a typ frakce.</Check>
+
+## Postup
+
+<Steps>
+  <Step title="Otevřete „Frakce / Nová frakce”">
+    Routa: `/u/factions/create`.
+  </Step>
+  <Step title="Vyplňte název">
+    1 až 64 znaků. Musí být **unikátní** (žádná jiná frakce ho nesmí mít).
+  </Step>
+  <Step title="Zvolte typ">
+    - **OPEN** — frakce je viditelná v seznamu, kdokoli si může napsat o vstup.
+    - **CLOSED** — frakce je v seznamu skrytá, vstup pouze na pozvánku. Default.
+  </Step>
+  <Step title="Doplňte popis (volitelně)">
+    Max 512 znaků. Slouží jako přehled toho, kdo jste a co děláte.
+  </Step>
+  <Step title="Avatar a banner (volitelně)">
+    Stejné limity jako u profilu.
+  </Step>
+  <Step title="Potvrďte">
+    Frakce vznikne, vy se stáváte **LEADER**.
+  </Step>
+</Steps>
+
+<Note>
+Po vytvoření může lídr posílat pozvánky. Otevřená frakce navíc dostává automaticky žádosti od hráčů, kteří v seznamu narazili.
+</Note>
+
+## Časté chyby
+
+<AccordionGroup>
+  <Accordion title="„Název už používá jiná frakce”">
+    Změňte název. Velká/malá písmena nehrají roli — `Wolves` a `wolves` se počítají jako stejný.
+  </Accordion>
+  <Accordion title="„Nemůžete být ve dvou frakcích současně”">
+    Než založíte novou, musíte stávající **opustit** nebo nechat **rozpustit**.
+  </Accordion>
+  <Accordion title="„Vyplňte název”">
+    Pole je povinné. Min 1 znak, max 64.
+  </Accordion>
+</AccordionGroup>
+
+## Další kroky
+
+Hned po vytvoření doporučujeme:
+
+1. Nastavit avatar a banner — frakce s vlastní vizualní identitou působí seriózně.
+2. Sepsat krátký zápis do **frakčního deníku** ([Frakce → Deník](/prirucka/frakce/denik)).
+3. Pozvat první členy ([Pozvánky](/prirucka/frakce/pozvanky)).

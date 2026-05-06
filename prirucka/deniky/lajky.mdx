@@ -1,0 +1,32 @@
+---
+title: "Lajky deníků"
+description: "Jak ukázat ostatním, že se vám zápis líbí."
+icon: "heart"
+---
+
+Pod každým zápisem najdete tlačítko se srdíčkem. Lajk je rychlá zpětná vazba autorovi a slouží také pro řazení / ukázku nejoblíbenějších zápisů.
+
+## Pravidla
+
+- Jeden uživatel může dát zápisu jen jeden lajk.
+- Lajk je togglovatelný — kliknutím znovu ho odeberete.
+- Vlastní zápisy si nelze lajkovat.
+- Lajky lze dávat pouze na zápisy s viditelností **PUBLIC** nebo **PROTECTED**.
+
+## Jak lajk funguje technicky
+
+Endpoint `POST /api/v1/journal/{id}/like` přepíná stav. Odpověď obsahuje:
+
+- `liked` — boolean, jestli vy lajkujete teď
+- `count` — celkový počet lajků
+- `liked_by_me` — pomocná hodnota pro UI
+
+Detail endpointu: [API reference / Deníky](/vyvojari/api/reference/character-journals).
+
+## Notifikace
+
+Autor zápisu **nedostane** notifikaci za každý lajk. Zobrazí se pouze celkový počet (chrání před spamem). Lajky lze využít jako jemnou zpětnou vazbu, ne jako oficiální komunikaci.
+
+<Tip>
+Pokud chcete autorovi opravdu poděkovat, napište mu zprávu na komunálním Discordu nebo dejte rovnou [reputaci](/prirucka/komunita/reputace).
+</Tip>

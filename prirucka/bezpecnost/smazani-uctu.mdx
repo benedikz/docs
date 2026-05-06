@@ -1,0 +1,64 @@
+---
+title: "Smazání účtu"
+description: "Trvalé odstranění účtu z DAYZERO Portálu — pravidla, lhůta a dopady."
+icon: "user-x"
+---
+
+Smazání účtu je nevratné. Před spuštěním procesu si rozmyslete, jestli vám stačí jen vypnout notifikace nebo odpojit Steam/Discord.
+
+## Co se smaže
+
+| Položka | Co se s ní stane |
+|---------|------------------|
+| Profil (username, avatar, banner, hymna) | Smazáno |
+| E-mail, heslo | Smazáno |
+| Postavy (živé i mrtvé) | Smazány nebo anonymizovány |
+| Deníky, fotky v galerii | Smazány |
+| Frakce, kde jste vůdce | Pokud jste sami → frakce smazána. Pokud nejste sami → vedení musíte předat předem. |
+| Sledování, reputace | Smazány |
+| Whitelist žádost | Smazána |
+| Sessions, zařízení | Smazány |
+
+## Co zůstává (anonymizované)
+
+- Logy v `user_activities` — bez vazby na vás (pro statistické účely)
+- Příspěvky na akcích, kde anonymizace dává smysl
+- Účetní informace o platbách (zákonné lhůty)
+
+## Postup
+
+<Steps>
+  <Step title="Stáhněte si export dat (volitelně)">
+    Doporučujeme uložit si data lokálně. [Návod](/prirucka/bezpecnost/export-dat).
+  </Step>
+  <Step title="Předejte vedení frakce, pokud jste lídr">
+    Před smazáním účtu musí být frakce „odbavená”. [Jak předat vedení](/prirucka/frakce/clenove).
+  </Step>
+  <Step title="Otevřete Nastavení → Soukromí → Smazat účet">
+    Akci je třeba potvrdit zadáním hesla.
+  </Step>
+  <Step title="Účet se naplánuje k smazání">
+    Status `scheduled_for_deletion` se nastaví na aktuální čas.
+  </Step>
+  <Step title="Lhůta na rozmyšlenou (grace period)">
+    Po dobu několika dnů se můžete přihlásit a smazání **zrušit**. Po jejím uplynutí cron job (`UserRemovalJob`) účet fyzicky odstraní.
+  </Step>
+</Steps>
+
+<Warning>
+Po uplynutí grace period jsou data nezotavitelná. Případné peníze v dárcovství zůstávají v systému, ale beans se mažou spolu s účtem.
+</Warning>
+
+## Časté otázky
+
+<AccordionGroup>
+  <Accordion title="Můžu si po smazání založit nový účet?">
+    Ano, ovšem nepůjde se zaregistrovat se stejným uživatelským jménem ihned (čeká se na dokončení mazání).
+  </Accordion>
+  <Accordion title="Co když smažu účet a pak chci zpět?">
+    Pokud jste v grace period, přihlášením se účet obnoví. Po uplynutí lhůty obnova není možná.
+  </Accordion>
+  <Accordion title="Mám viset frakci jako její jediný člen — co s tím?">
+    Buď ji předtím rozpusťte sami, nebo požádejte admina. Při ručním smazání admin frakci buď rozpustí, nebo přiřadí jiného vedoucího.
+  </Accordion>
+</AccordionGroup>
