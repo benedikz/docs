@@ -20,27 +20,9 @@
   },
   "navigation": {
     "directory": "card",
-    "products": [
-      {
-        "product": "Začínáme",
-        "tabs": [
-          {
-            "tab": "Začínáme",
-            "dropdowns": [
-              {
-                "dropdown": "test"
-              }
-            ]
-          }
-        ],
-        "icon": "rocket"
-      }
-    ]
+    "groups": []
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/light.svg"
-  },
+  "logo": "/logo/light.svg",
   "navbar": {
     "links": [],
     "primary": {
